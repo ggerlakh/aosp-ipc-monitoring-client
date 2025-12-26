@@ -36,37 +36,27 @@ adb shell dumpsys activity services
 
 ```json
 {
-  "device_id": "android_uuid_12345",
-  "timestamp_sent": 1715420000123,
-  "events": [
+  "ws_message_type": "IPC_DATA_BATCH",  // Поле для маршрутизации на сервере
+  "device_id": "android_pixel_7_uuid",
+  "sent_at": 1715420005000,
+  "events": [ // Массив событий (тот самый формат, что мы обсуждали)
     {
       "type": "BROADCAST",
-      "timestamp": 1715419999000,
+      "timestamp": 1715420004100,
       "source_pkg": "com.android.systemui",
       "target_pkg": "com.example.myapp",
       "payload": {
         "action": "android.intent.action.BATTERY_CHANGED",
-        "extras": {"level": 85, "plugged": false}
+        "extras": {"level": 85}
       }
     },
     {
       "type": "SERVICE_BIND",
-      "timestamp": 1715419999500,
-      "source_pkg": "com.google.android.youtube",
-      "target_pkg": "com.google.android.gms",
+      "timestamp": 1715420004200,
+      "source_pkg": "com.whatsapp",
+      "target_pkg": "com.android.contacts",
       "payload": {
-        "service_class": "com.google.android.gms.auth.GetTokenService",
-        "flags": "BIND_AUTO_CREATE"
-      }
-    },
-    {
-      "type": "PROVIDER_ACCESS",
-      "timestamp": 1715419999800,
-      "source_pkg": "com.instagram.android",
-      "target_pkg": "com.android.providers.media",
-      "payload": {
-        "authority": "media",
-        "uri": "content://media/external/images/media/123"
+        "service": "ContactService"
       }
     }
   ]
