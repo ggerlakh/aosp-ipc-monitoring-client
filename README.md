@@ -58,6 +58,15 @@ adb shell dumpsys activity services
       "payload": {
         "service": "ContactService"
       }
+    },
+    {
+      "type": "PROVIDER_ACCESS",
+      "timestamp": 1715419999800,
+      "source_pkg": "com.instagram.android",
+      "target_pkg": "com.android.providers.media",
+      "payload": {
+        "authority": "media",
+        "uri": "content://media/external/images/media/123"
     }
   ]
 }
