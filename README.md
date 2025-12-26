@@ -32,4 +32,44 @@ adb shell dumpsys activity services
 Пример вывода данных также есть в файле `adb_shell_activity_log.txt`.  
 
 
+## Пример отправляемого JSON
+
+```json
+{
+  "device_id": "android_uuid_12345",
+  "timestamp_sent": 1715420000123,
+  "events": [
+    {
+      "type": "BROADCAST",
+      "timestamp": 1715419999000,
+      "source_pkg": "com.android.systemui",
+      "target_pkg": "com.example.myapp",
+      "payload": {
+        "action": "android.intent.action.BATTERY_CHANGED",
+        "extras": {"level": 85, "plugged": false}
+      }
+    },
+    {
+      "type": "SERVICE_BIND",
+      "timestamp": 1715419999500,
+      "source_pkg": "com.google.android.youtube",
+      "target_pkg": "com.google.android.gms",
+      "payload": {
+        "service_class": "com.google.android.gms.auth.GetTokenService",
+        "flags": "BIND_AUTO_CREATE"
+      }
+    },
+    {
+      "type": "PROVIDER_ACCESS",
+      "timestamp": 1715419999800,
+      "source_pkg": "com.instagram.android",
+      "target_pkg": "com.android.providers.media",
+      "payload": {
+        "authority": "media",
+        "uri": "content://media/external/images/media/123"
+      }
+    }
+  ]
+}
+```
 
