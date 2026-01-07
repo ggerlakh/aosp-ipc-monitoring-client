@@ -1,44 +1,21 @@
 package com.example.ipcmonitorclient
 
-import android.os.Bundle
-import androidx.activity.enableEdgeToEdge
-import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.ViewCompat
-import androidx.core.view.WindowInsetsCompat
-
 import android.content.BroadcastReceiver
 import android.content.Context
-import android.content.IntentFilter
 import android.content.Intent
+import android.content.IntentFilter
 import android.graphics.Color
-import android.text.Spannable
-import android.text.SpannableString
-import android.text.style.ForegroundColorSpan
-import android.widget.Button
-import android.widget.ScrollView
-import android.widget.TextView
+import android.os.Bundle
+import android.provider.Settings
+import android.text.method.ScrollingMovementMethod
+import android.util.Log
+import android.widget.*
+import androidx.appcompat.app.AppCompatActivity
+import org.json.JSONObject
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
 
-import org.json.JSONObject
-import android.util.Log
-import com.example.ipcmonitorclient.IpcMonitorReceiver.Companion.TAG
-
-//class NetworkChangeReceiver : BroadcastReceiver() {
-//    override fun onReceive(context: Context, intent: Intent) {
-//        if (isNetworkAvailable(context)) {
-//            Toast.makeText(context, "Network is available >>>>>>>>>", Toast.LENGTH_SHORT).show()
-//        } else {
-//            Toast.makeText(context, "Network is not available", Toast.LENGTH_SHORT).show()
-//        }
-//    }
-//    private fun isNetworkAvailable(context: Context): Boolean {
-//        val connectivityManager = context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
-//        val activeNetworkInfo = connectivityManager.activeNetworkInfo
-//        return activeNetworkInfo != null && activeNetworkInfo.isConnected
-//    }
-//}
 
 class IpcMonitorReceiver(
     private val onDataReceived: (JSONObject) -> Unit
@@ -67,104 +44,118 @@ class IpcMonitorReceiver(
         }
     }
 }
-
 class MainActivity : AppCompatActivity() {
 
     private lateinit var logTextView: TextView
     private lateinit var scrollView: ScrollView
+    private lateinit var etTargetPackages: EditText
+    private lateinit var swMonitor: Switch
 
-    // Ссылка на наш кастомный ресивер
-    // private var ipcMonitorReceiver: IpcMonitorReceiver? = null
-
-    private lateinit var ipcMonitorReceiver: IpcMonitorReceiver
+    private var ipcMonitorReceiver: IpcMonitorReceiver? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setupUI()
 
-        // Инициализируем ресивер и передаем логику обработки JSON
+        // 1. Привязываем логику ресивера к UI
         ipcMonitorReceiver = IpcMonitorReceiver { json ->
             renderIpcEvent(json)
+        }
+
+        // 2. Логика управления настройками AOSP
+        swMonitor.setOnCheckedChangeListener { _, isChecked ->
+            saveSettings(isChecked, etTargetPackages.text.toString())
+            val status = if (isChecked) "ON" else "OFF"
+            Toast.makeText(this, "Monitor $status", Toast.LENGTH_SHORT).show()
+        }
+    }
+
+    private fun saveSettings(enabled: Boolean, packages: String) {
+        try {
+            val resolver = contentResolver
+            // Записываем флаг включения
+            Settings.Global.putInt(resolver, "ipc_monitor_enabled", if (enabled) 1 else 0)
+            // Записываем список пакетов (например: "com.android.gallery3d,com.android.contacts")
+            Settings.Global.putString(resolver, "ipc_monitor_targets", packages.ifEmpty { "*" })
+        } catch (e: Exception) {
+            Toast.makeText(this, "Error! ${e}", Toast.LENGTH_LONG).show()
         }
     }
 
     private fun renderIpcEvent(json: JSONObject) {
-        // Всегда обновляем UI в основном потоке
         runOnUiThread {
-            Log.d("IpcMonitorReceiver", "Processing MainActivity.renderIpcEvent")
-            val type = json.optString("type", "UNKNOWN")
-            val sender = json.optString("sender", "n/a")
-            val receiver = json.optString("receiver", "n/a")
-            val timestamp = json.optLong("timestamp", System.currentTimeMillis())
+            val type = json.optString("type")
+            val sender = json.optString("sender")
+            val receiver = json.optString("receiver")
+            val payload = json.optJSONObject("payload")
+            val uri = payload?.optString("uri") ?: "no-uri"
+            val timestamp = json.optLong("timestamp")
+
             val time = SimpleDateFormat("HH:mm:ss", Locale.getDefault()).format(Date(timestamp))
 
-            val sb = StringBuilder("[$time] TYPE: $type\n")
-            sb.append("SENDER: $sender\n")
-            sb.append("TARGET: $receiver\n")
+            // Формируем красивый лог
+            val entry = "[$time] TYPE $type \n" +
+                    "FROM: $sender\n" +
+                    "TO:   $receiver\n" +
+                    "payload:  $payload\n" +
+                    "---------------------------\n"
 
-            // Добавляем специфичные поля в зависимости от типа
-            when (type) {
-                "ContentProvider" -> sb.append("AUTH: ${json.optJSONObject("payload").optString("authority")}\n")
-                "Broadcast" -> sb.append("ACTION: ${json.optString("action")}\n")
-            }
-            sb.append("\n")
+            logTextView.append(entry)
 
-            appendLog(sb.toString(), type)
+            // Автопрокрутка вниз
+            scrollView.post { scrollView.fullScroll(ScrollView.FOCUS_DOWN) }
         }
-    }
-
-    private fun appendLog(text: String, type: String) {
-        Log.d("IpcMonitorReceiver", "Processing MainActivity.appendLog")
-        val color = when (type) {
-            "Broadcast" -> Color.parseColor("#2E7D32") // Зеленый
-            "ContentProvider" -> Color.parseColor("#1565C0") // Синий
-            else -> Color.BLACK
-        }
-
-        val spannable = SpannableString(text)
-        spannable.setSpan(ForegroundColorSpan(color), 0, text.indexOf("\n"), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
-
-        logTextView.append(spannable)
-        scrollView.post { scrollView.fullScroll(ScrollView.FOCUS_DOWN) }
     }
 
     override fun onStart() {
-        Log.d("IpcMonitorReceiver", "Processing MainActivity.onStart")
         super.onStart()
-        // Регистрация ресивера
-        // ipcMonitorReceiver?.let {
-        //     val filter = IntentFilter(IpcMonitorReceiver.ACTION_IPC_MONITOR)
-        //     registerReceiver(it, filter, Context.RECEIVER_EXPORTED)
-        // }
-
-        val filter = IntentFilter(IpcMonitorReceiver.ACTION_IPC_MONITOR)
-        registerReceiver(ipcMonitorReceiver, filter, Context.RECEIVER_EXPORTED)
+        ipcMonitorReceiver?.let {
+            registerReceiver(it, IntentFilter("com.custom.aosp.IPC_MONITOR_EVENT"), Context.RECEIVER_EXPORTED)
+        }
     }
 
     override fun onStop() {
-        Log.d("IpcMonitorReceiver", "Processing MainActivity.onStop")
         super.onStop()
-        // Отмена регистрации для предотвращения утечек памяти
-        // ipcMonitorReceiver?.let { unregisterReceiver(it) }
-        
-        unregisterReceiver(ipcMonitorReceiver)
+        ipcMonitorReceiver?.let { unregisterReceiver(it) }
     }
 
     private fun setupUI() {
-        Log.d("IpcMonitorReceiver", "Processing MainActivity.setupUI")
-        val root = android.widget.LinearLayout(this).apply {
-            orientation = android.widget.LinearLayout.VERTICAL
-            setPadding(16, 16, 16, 16)
+        val root = LinearLayout(this).apply {
+            orientation = LinearLayout.VERTICAL
+            setPadding(30, 500, 30, 30)
         }
+
+        swMonitor = Switch(this).apply {
+            text = "Enable IPC Monitoring "
+            textSize = 18f
+        }
+
+        etTargetPackages = EditText(this).apply {
+            hint = "Target packages (comma separated or *)"
+            setText("*")
+        }
+
         val btnClear = Button(this).apply {
-            text = "Clear"
+            text = "Clear Logs"
             setOnClickListener { logTextView.text = "" }
         }
-        scrollView = ScrollView(this)
-        logTextView = TextView(this).apply { textSize = 12f }
 
-        scrollView.addView(logTextView)
+        scrollView = ScrollView(this).apply {
+            layoutParams = LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.MATCH_PARENT, 0, 1f
+            )
+        }
+
+        logTextView = TextView(this).apply {
+            textSize = 12f
+            setTextColor(Color.BLACK)
+            movementMethod = ScrollingMovementMethod()
+        }
+
+        root.addView(swMonitor)
+        root.addView(etTargetPackages)
         root.addView(btnClear)
+        scrollView.addView(logTextView)
         root.addView(scrollView)
         setContentView(root)
     }
