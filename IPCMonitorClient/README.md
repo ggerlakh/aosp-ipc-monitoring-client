@@ -22,7 +22,7 @@
 
 Пример базовой реализации 
 
-[example](../img/content_provider_intecept_example.png)
+![example](../img/content_provider_intecept_example.png)
 
 Пример получаемого от Android JSON о `ContentProvider` IPC:
 ```json
