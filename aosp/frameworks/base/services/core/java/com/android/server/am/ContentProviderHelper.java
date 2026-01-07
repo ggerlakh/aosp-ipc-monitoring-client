@@ -103,7 +103,7 @@ import java.util.Map;
 import java.util.Objects;
 
 // START CUSTOM IPC MONITOR
-import org.json.JSONObject
+import org.json.JSONObject;
 // END CUSTOM IPC MONITOR
 
 /**
@@ -136,6 +136,7 @@ public class ContentProviderHelper {
      * @param cpr запись провайдера, к которому обращаются (Target)
      */
     private void reportCpInteraction(ProcessRecord callerApp, ContentProviderRecord cpr) {
+        Slog.d("IPC_DEBUG", "Hook triggered! Sender: " + (callerApp != null ? callerApp.processName : "null"));
         // Используем Handler ActivityManagerService, чтобы не тормозить текущий поток
         mService.mHandler.post(() -> {
             try {
@@ -152,6 +153,7 @@ public class ContentProviderHelper {
                 // Не логируем, если монитор запрашивает что-то (хотя для CP это редкость)
                 // И не логируем само на себя (внутренние запросы приложения)
                 if (MONITOR_PKG.equals(sender) || sender.equals(targetPkg)) {
+                    Slog.d("IPC_DEBUG", "Skipping ContentProvider IPC send, sender: " + sender + ", targetPkg: " + targetPkg);
                     return;
                 }
 
@@ -160,7 +162,12 @@ public class ContentProviderHelper {
                 json.put("type", "ContentProvider");
                 json.put("sender", sender);
                 json.put("receiver", targetPkg);
-                json.put("authority", authority); // Уникальная фишка CP
+                
+                // Вложенный объект payload
+                JSONObject payload = new JSONObject();
+                payload.put("authority", authority);
+
+                json.put("payload", payload);
                 json.put("timestamp", System.currentTimeMillis());
 
                 // 3. Отправка Intent
@@ -168,8 +175,12 @@ public class ContentProviderHelper {
                 monitorIntent.setPackage(MONITOR_PKG);
                 monitorIntent.putExtra("ipc_data", json.toString());
                 monitorIntent.addFlags(Intent.FLAG_RECEIVER_INCLUDE_BACKGROUND); // На всякий случай
+                
+                monitorIntent.addFlags(Intent.FLAG_RECEIVER_REGISTERED_ONLY); // Доставлять только тем, кто слушает сейчас
+                monitorIntent.addFlags(Intent.FLAG_RECEIVER_FOREGROUND);      // Повысить приоритет доставки
 
                 mService.mContext.sendBroadcastAsUser(monitorIntent, UserHandle.ALL);
+                Slog.d("IPC_DEBUG", "Intent sent to: " + MONITOR_PKG);
 
             } catch (Exception e) {
                 Slog.e("IPC_MONITOR", "Failed to report CP interaction", e);
@@ -234,6 +245,10 @@ public class ContentProviderHelper {
         ProviderInfo cpi = null;
         boolean providerRunning = false;
         final int expectedUserId = userId;
+
+        // --- START CUSTOM IPC MONITOR CODE ---
+        Slog.d("IPC_DEBUG", "called ContentProviderHelper.getContentProviderImpl(), name: " + name + ", callingPackage: " + callingPackage);
+        // --- END CUSTOM IPC MONITOR CODE ---
         synchronized (mService) {
             long startTime = SystemClock.uptimeMillis();
             long startTimeNs = SystemClock.uptimeNanos();
@@ -308,6 +323,17 @@ public class ContentProviderHelper {
                     }
                 }
             }
+            // START CUSTOM IPC MONITOR
+            ProcessRecord callerProcessRecord = null;
+            if (caller != null) {
+                callerProcessRecord = mService.getRecordForAppLOSP(caller);
+                if (cpr != null) {
+                    // callerProcessRecord - кто просит (ProcessRecord)
+                    // cpr - у кого просят (ContentProviderRecord)
+                    reportCpInteraction(callerProcessRecord, cpr);
+                }
+            }
+            // END CUSTOM IPC MONITOR
 
             ProcessRecord dyingProc = null;
             if (cpr != null && cpr.proc != null) {
@@ -765,6 +791,7 @@ public class ContentProviderHelper {
         }
 
         // START CUSTOM IPC MONITOR
+        /*
         synchronized (mService) {
             ProcessRecord callerProcessRecord = null;
             if (caller != null) {
@@ -776,6 +803,7 @@ public class ContentProviderHelper {
                 }
             }
         }
+        */
         // END CUSTOM IPC MONITOR
         return cpr.newHolder(conn, false);
     }
