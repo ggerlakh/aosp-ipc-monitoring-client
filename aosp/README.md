@@ -104,3 +104,4 @@ adb shell logcat
     # для установки собранной APK в установленный AVD
     adb install -r app/build/outputs/apk/debug/app-debug.apk 
    ```
+6. Для пересборки изменений в `frameworks/base/core/java/android/content/ContentProvider.java` можно использовать команду `make framework-minus-apex` вместо пересборки всего проекта
