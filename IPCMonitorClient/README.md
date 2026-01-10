@@ -1,7 +1,7 @@
 # Android Studio проект клиенсткого приложения на kotlin для получения данных об IPC взаимодействиях от Android
 
 Само приложение устроено следующим образом: данные об IPC взаимодействиях предполагается получать от Android также через IPC взаимодействие `BroadcastReceiver`.  
-На данный момент реализовано через патч в директории `aosp` только получение информации о `ContentProvider` IPC.  
+На данный момент реализовано через патч в директории `aosp` только получение информации о `ContentProvider` и `Service` IPC.  
 
 ## Полезные команды для запуска
 
@@ -17,6 +17,22 @@
   ```bash
   adb shell pm grant com.example.ipcmonitorclient android.permission.WRITE_SECURE_SETTINGS
   ```
+- Команды для просмотра логов
+  ```bash
+  # Просмотр всех логов в ОС
+  adb shell logcat
+  # Просмотр логов на стороне ОС связанных с отправкой данных об IPC взаиодействиях клиенсткому приложению
+  adb logcat -s IPC_MONITOR
+  # Просмотр клиентских логов связанных с обработкой данных об IPC от ОС
+  adb logcat -s IpcMonitorReceiver
+  ```
+- Команды для тестирования обработки IPC взаимодействий
+  ```bash
+  # Для тестирования обработки ContentProvider IPC
+  adb shell content query --uri content://com.android.contacts/data/phones --projection display_name:data1
+  # Для тестирования обработки Service IPC
+  adb shell am start-foreground-service -n com.android.systemui/.keyguard.KeyguardService
+  ```
 
 ## Примеры получаемых данных
 
@@ -28,57 +44,23 @@
 ```json
 {
     "type": "ContentProvider",
-    "sender": "com.android.dialer",
-    "receiver": "com.android.providers.contacts",
+    "sender": "com.android.phone",
+    "receiver": "com.android.providers.telephony",
     "payload": {
-        "authority": "com.android.voicemail",
-        "uri": "content://com.android.voicemail/status?source_package=com.android.dialer",
-        "method": "insert"
+        "authority": "telephony",
+        "uri": "content://telephony/siminfo/1",
+        "method": "update"
     },
-    "timestamp": 1767827584646
+    "timestamp": 1768083376804
 },
 {
-    "type": "ContentProvider",
-    "sender": "com.android.dialer",
-    "receiver": "com.android.providers.contacts",
+    "type": "Service",
+    "sender": "android",
+    "receiver": "com.android.providers.calendar",
     "payload": {
-        "authority": "com.android.voicemail",
-        "uri": "content://com.android.voicemail/status?source_package=com.android.dialer",
-        "method": "insert"
+        "action": "bindService",
+        "service_type": "BoundService"
     },
-    "timestamp": 1767827649743
-},
-{
-    "type": "ContentProvider",
-    "sender": "com.android.dialer",
-    "receiver": "com.android.providers.contacts",
-    "payload": {
-        "authority": "com.android.voicemail",
-        "uri": "content://com.android.voicemail/status?source_package=com.android.dialer",
-        "method": "insert"
-    },
-    "timestamp": 1767827649771
-},
-{
-    "type": "ContentProvider",
-    "sender": "com.android.dialer",
-    "receiver": "com.android.providers.contacts",
-    "payload": {
-        "authority": "com.android.voicemail",
-        "uri": "content://com.android.voicemail/status?source_package=com.android.dialer",
-        "method": "insert"
-    },
-    "timestamp": 1767827779878
-},
-{
-    "type": "ContentProvider",
-    "sender": "com.android.dialer",
-    "receiver": "com.android.providers.contacts",
-    "payload": {
-        "authority": "com.android.voicemail",
-        "uri": "content://com.android.voicemail/status?source_package=com.android.dialer",
-        "method": "insert"
-    },
-    "timestamp": 1767827779892
+    "timestamp": 1768083381084
 }
 ```

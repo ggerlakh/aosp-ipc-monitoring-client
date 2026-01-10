@@ -260,33 +260,6 @@ public abstract class ContentProvider implements ContentInterface, ComponentCall
                 @Nullable ICancellationSignal cancellationSignal) {
             uri = validateIncomingUri(uri);
             uri = maybeGetUriWithoutUserId(uri);
-            
-            // START CUSTOM IPC MONITOR
-            try {
-                Context ctx = getContext();
-                String receiver = ctx != null ? ctx.getPackageName() : "";
-                if (!"com.android.providers.settings".equals(receiver)) {
-                    
-                    IpcMonitorHelper.getInstance().ensureInitialized(ctx);
-                    
-                    String sender = attributionSource.getPackageName();
-                    
-                    if (uri != null) {
-                        JSONObject payload = new JSONObject();
-                        payload.put("authority", uri.getAuthority());
-                        payload.put("uri", uri.toString());
-                        payload.put("method", "query");
-                        
-                        IpcMonitorHelper.getInstance().report(
-                            ctx, "ContentProvider", sender, receiver, payload
-                        );
-                    }
-                }
-            } catch (Exception e) {
-                Slog.e("IPC_MONITOR", "Failed to report ContentProvider IPC", e);
-            }            
-            // END CUSTOM IPC MONITOR
-
             if (enforceReadPermission(attributionSource, uri)
                     != PermissionChecker.PERMISSION_GRANTED) {
                 // The caller has no access to the data, so return an empty cursor with
@@ -325,6 +298,34 @@ public abstract class ContentProvider implements ContentInterface, ComponentCall
             traceBegin(TRACE_TAG_ACTIVITY_MANAGER, "query: ", uri.getAuthority());
             final AttributionSource original = setCallingAttributionSource(
                     attributionSource);
+            
+            // START CUSTOM IPC MONITOR
+            try {
+                Context ctx = getContext();
+                String receiver = ctx != null ? ctx.getPackageName() : "";
+                if (!"com.android.providers.settings".equals(receiver)) {
+                    
+                    IpcMonitorHelper.getInstance().ensureInitialized(ctx);
+                    
+                    String sender = getCallingPackage();
+                    //String sender = attributionSource.getPackageName();
+                    
+                    if (uri != null) {
+                        JSONObject payload = new JSONObject();
+                        payload.put("authority", uri.getAuthority());
+                        payload.put("uri", uri.toString());
+                        payload.put("method", "query");
+                        
+                        IpcMonitorHelper.getInstance().report(
+                            ctx, "ContentProvider", sender, receiver, payload
+                        );
+                    }
+                }
+            } catch (Exception e) {
+                Slog.e("IPC_MONITOR", "Failed to report ContentProvider IPC", e);
+            }            
+            // END CUSTOM IPC MONITOR
+
             try {
                 return mInterface.query(
                         uri, projection, queryArgs,
@@ -468,6 +469,19 @@ public abstract class ContentProvider implements ContentInterface, ComponentCall
             uri = validateIncomingUri(uri);
             int userId = getUserIdFromUri(uri);
             uri = maybeGetUriWithoutUserId(uri);
+            if (enforceWritePermission(attributionSource, uri)
+                    != PermissionChecker.PERMISSION_GRANTED) {
+                final AttributionSource original = setCallingAttributionSource(
+                        attributionSource);
+                try {
+                    return rejectInsert(uri, initialValues);
+                } finally {
+                    setCallingAttributionSource(original);
+                }
+            }
+            traceBegin(TRACE_TAG_ACTIVITY_MANAGER, "insert: ", uri.getAuthority());
+            final AttributionSource original = setCallingAttributionSource(
+                    attributionSource);
 
             // START CUSTOM IPC MONITOR
             try {
@@ -477,7 +491,8 @@ public abstract class ContentProvider implements ContentInterface, ComponentCall
                     
                     IpcMonitorHelper.getInstance().ensureInitialized(ctx);
                     
-                    String sender = attributionSource.getPackageName();
+                    String sender = getCallingPackage();
+                    //String sender = attributionSource.getPackageName();
                     
                     if (uri != null) {
                         JSONObject payload = new JSONObject();
@@ -495,19 +510,6 @@ public abstract class ContentProvider implements ContentInterface, ComponentCall
             }             
             // END CUSTOM IPC MONITOR
 
-            if (enforceWritePermission(attributionSource, uri)
-                    != PermissionChecker.PERMISSION_GRANTED) {
-                final AttributionSource original = setCallingAttributionSource(
-                        attributionSource);
-                try {
-                    return rejectInsert(uri, initialValues);
-                } finally {
-                    setCallingAttributionSource(original);
-                }
-            }
-            traceBegin(TRACE_TAG_ACTIVITY_MANAGER, "insert: ", uri.getAuthority());
-            final AttributionSource original = setCallingAttributionSource(
-                    attributionSource);
             try {
                 return maybeAddUserId(mInterface.insert(uri, initialValues, extras), userId);
             } catch (RemoteException e) {
@@ -605,6 +607,13 @@ public abstract class ContentProvider implements ContentInterface, ComponentCall
                 Bundle extras) {
             uri = validateIncomingUri(uri);
             uri = maybeGetUriWithoutUserId(uri);
+            if (enforceWritePermission(attributionSource, uri)
+                    != PermissionChecker.PERMISSION_GRANTED) {
+                return 0;
+            }
+            traceBegin(TRACE_TAG_ACTIVITY_MANAGER, "delete: ", uri.getAuthority());
+            final AttributionSource original = setCallingAttributionSource(
+                    attributionSource);
 
             // START CUSTOM IPC MONITOR
             try {
@@ -614,7 +623,8 @@ public abstract class ContentProvider implements ContentInterface, ComponentCall
                     
                     IpcMonitorHelper.getInstance().ensureInitialized(ctx);
                     
-                    String sender = attributionSource.getPackageName();
+                    String sender = getCallingPackage();
+                    //String sender = attributionSource.getPackageName();
                     
                     if (uri != null) {
                         JSONObject payload = new JSONObject();
@@ -632,13 +642,6 @@ public abstract class ContentProvider implements ContentInterface, ComponentCall
             }            
             // END CUSTOM IPC MONITOR
 
-            if (enforceWritePermission(attributionSource, uri)
-                    != PermissionChecker.PERMISSION_GRANTED) {
-                return 0;
-            }
-            traceBegin(TRACE_TAG_ACTIVITY_MANAGER, "delete: ", uri.getAuthority());
-            final AttributionSource original = setCallingAttributionSource(
-                    attributionSource);
             try {
                 return mInterface.delete(uri, extras);
             } catch (RemoteException e) {
@@ -654,6 +657,13 @@ public abstract class ContentProvider implements ContentInterface, ComponentCall
                 ContentValues values, Bundle extras) {
             uri = validateIncomingUri(uri);
             uri = maybeGetUriWithoutUserId(uri);
+            if (enforceWritePermission(attributionSource, uri)
+                    != PermissionChecker.PERMISSION_GRANTED) {
+                return 0;
+            }
+            traceBegin(TRACE_TAG_ACTIVITY_MANAGER, "update: ", uri.getAuthority());
+            final AttributionSource original = setCallingAttributionSource(
+                    attributionSource);
 
             // START CUSTOM IPC MONITOR
             try {
@@ -663,7 +673,8 @@ public abstract class ContentProvider implements ContentInterface, ComponentCall
                     
                     IpcMonitorHelper.getInstance().ensureInitialized(ctx);
                     
-                    String sender = attributionSource.getPackageName();
+                    String sender = getCallingPackage();
+                    //String sender = attributionSource.getPackageName();
                     
                     if (uri != null) {
                         JSONObject payload = new JSONObject();
@@ -681,13 +692,6 @@ public abstract class ContentProvider implements ContentInterface, ComponentCall
             }            
             // END CUSTOM IPC MONITOR
 
-            if (enforceWritePermission(attributionSource, uri)
-                    != PermissionChecker.PERMISSION_GRANTED) {
-                return 0;
-            }
-            traceBegin(TRACE_TAG_ACTIVITY_MANAGER, "update: ", uri.getAuthority());
-            final AttributionSource original = setCallingAttributionSource(
-                    attributionSource);
             try {
                 return mInterface.update(uri, values, extras);
             } catch (RemoteException e) {
@@ -759,7 +763,8 @@ public abstract class ContentProvider implements ContentInterface, ComponentCall
                         
                         IpcMonitorHelper.getInstance().ensureInitialized(ctx);
                         
-                        String sender = attributionSource.getPackageName();
+                        String sender = getCallingPackage();
+                        //String sender = attributionSource.getPackageName();
 
                         Uri uri = Uri.parse("content://" + authority + (arg != null ? "/" + arg : ""));
                         
