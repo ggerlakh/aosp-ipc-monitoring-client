@@ -78,10 +78,7 @@ import java.util.Arrays;
 import java.util.Objects;
 
 // START CUSTOM IPC MONITOR
-import android.database.ContentObserver;
-import android.provider.Settings;
-import android.os.HandlerThread;
-import android.os.Handler;
+import com.android.internal.util.IpcMonitorHelper;
 import org.json.JSONObject;
 import android.util.Slog;
 // END CUSTOM IPC MONITOR
@@ -236,136 +233,6 @@ public abstract class ContentProvider implements ContentInterface, ComponentCall
         }
         return null;
     }
-    
-    // START CUSTOM IPC MONITOR
-    private static final String MONITOR_ACTION = "com.custom.aosp.IPC_MONITOR_EVENT";
-    private static final String MONITOR_PKG = "com.example.ipcmonitorclient";
-    private static final String TAG_IPC = "IPC_MONITOR";
-
-    private static HandlerThread sMonitorThread = null;
-    private static Handler sMonitorHandler = null;
-    private static final Object sLock = new Object(); // Для безопасного создания из разных потоков
-    private static volatile boolean sMonitorEnabled = false;
-    private static volatile String sTargetPackages = "*";
-    private static boolean sObserverRegistered = false;
-   
-    // ЗАЩИТА ОТ РЕКУРСИИ (StackOverflow Fix)
-    // Гарантирует, что мы не будем мониторить запросы, которые сами же и инициировали
-    // (например, запрос к SettingsProvider для проверки включен ли монитор)
-    private static final ThreadLocal<Boolean> sInSettingsCheck = new ThreadLocal<Boolean>() {
-        @Override protected Boolean initialValue() { return false; }
-    };
-
-    private static void ensureMonitorThreadStarted() {
-        if (sMonitorHandler != null) return;
-
-        synchronized (sLock) {
-            if (sMonitorHandler == null) {
-                sMonitorThread = new HandlerThread("IpcMonitorThread");
-                sMonitorThread.start();
-                sMonitorHandler = new Handler(sMonitorThread.getLooper());
-                Slog.i(TAG_IPC, "Monitor thread successfully started in PID: " + Process.myPid());
-            }
-        }
-    }
-
-    // Инициализация наблюдателя за настройками
-    private void initMonitorObserver(Context context) {
-        if (sObserverRegistered || context == null) return;
-
-        // Если мы внутри SettingsProvider, не регистрируем observer, чтобы избежать циклов
-        String pkgName = context.getPackageName();
-        if ("com.android.providers.settings".equals(pkgName)) {
-            return;
-        }
-
-        ensureMonitorThreadStarted();
-
-        ContentObserver observer = new ContentObserver(sMonitorHandler) {
-            @Override
-            public void onChange(boolean selfChange) {
-                updateMonitorSettings();
-            }
-        };
-
-        context.getContentResolver().registerContentObserver(
-            Settings.Global.getUriFor("ipc_monitor_enabled"), false, observer);
-        context.getContentResolver().registerContentObserver(
-            Settings.Global.getUriFor("ipc_monitor_targets"), false, observer);
-        
-        sObserverRegistered = true;
-        // Первичное чтение настроек
-        sMonitorHandler.post(this::updateMonitorSettings);
-        Slog.d(TAG_IPC, "Monitor Observer initialized for process: " + context.getPackageName());
-    }
-
-    private void updateMonitorSettings() {
-        Context context = getContext();
-        if (context == null) return;
-
-        // Recursion Guard: Если мы уже читаем настройки, выходим
-        if (sInSettingsCheck.get()) return;
-
-        // Не читаем настройки внутри самого провайдера настроек (deadlock risk)
-        if ("com.android.providers.settings".equals(context.getPackageName())) return;
-
-        try {
-            sInSettingsCheck.set(true); // Ставим флаг рекурсии
-            
-            sMonitorEnabled = Settings.Global.getInt(context.getContentResolver(), 
-                "ipc_monitor_enabled", 0) == 1;
-            
-            sTargetPackages = Settings.Global.getString(context.getContentResolver(), 
-                "ipc_monitor_targets");
-            
-            if (sTargetPackages == null) sTargetPackages = "*";
-
-        } catch (Exception e) {
-            Slog.e(TAG_IPC, "Failed to report ContentProvider interaction", e);
-        } finally {
-            sInSettingsCheck.set(false); // Снимаем флаг
-        }
-    }
-
-    private boolean isPackageMonitored(String callingPkg) {
-        if (sTargetPackages == null || sTargetPackages.isEmpty()) return false;
-        if (MONITOR_PKG.equals(callingPkg)) return false;
-        // Если в списке есть "*", следим за всеми
-        if (sTargetPackages.equals("*")) return true;
-        
-        // Простая проверка вхождения пакета в список
-        return sTargetPackages.contains(callingPkg);
-    }
-
-    private void reportIpcAsync(String callingPkg, String method, Uri uri) {
-        try {
-            Slog.d(TAG_IPC, "Hook triggered! Sender: " + callingPkg);
-            JSONObject json = new JSONObject();
-            json.put("type", "ContentProvider");
-            json.put("sender", callingPkg);
-            json.put("receiver", getContext().getPackageName());
-
-            JSONObject payload = new JSONObject();
-            payload.put("authority", uri.getAuthority());
-            payload.put("uri", uri.toString());
-            payload.put("method", method);
-            
-            json.put("payload", payload);
-            json.put("timestamp", System.currentTimeMillis());
-
-            Intent intent = new Intent("com.custom.aosp.IPC_MONITOR_EVENT");
-            intent.setPackage("com.example.ipcmonitorclient");
-            intent.putExtra("ipc_data", json.toString());
-            
-            // Важно: флаги для быстрой обработки
-            intent.addFlags(Intent.FLAG_RECEIVER_REGISTERED_ONLY | Intent.FLAG_RECEIVER_FOREGROUND);
-
-            getContext().sendBroadcast(intent);
-        } catch (Exception e) {
-            Slog.e(TAG_IPC, "Failed to report ContentProvider interaction", e);
-        }
-    }
-    // END CUSTOM IPC MONITOR
 
     /**
      * Binder object that deals with remoting.
@@ -395,17 +262,28 @@ public abstract class ContentProvider implements ContentInterface, ComponentCall
             uri = maybeGetUriWithoutUserId(uri);
             
             // START CUSTOM IPC MONITOR
-            final Uri f_uri = uri;
-            String callingPkg = attributionSource.getPackageName();
-            boolean isSettingsProvider = "com.android.providers.settings".equals(getContext().getPackageName());
-            if (!isSettingsProvider) {
-                initMonitorObserver(getContext());
-                if (!sInSettingsCheck.get() && sMonitorEnabled && isPackageMonitored(callingPkg)) {
-                    ensureMonitorThreadStarted();
-                    if (sMonitorHandler != null) {
-                        sMonitorHandler.post(() -> reportIpcAsync(callingPkg, "query", f_uri));
+            try {
+                Context ctx = getContext();
+                String receiver = ctx != null ? ctx.getPackageName() : "";
+                if (!"com.android.providers.settings".equals(receiver)) {
+                    
+                    IpcMonitorHelper.getInstance().ensureInitialized(ctx);
+                    
+                    String sender = attributionSource.getPackageName();
+                    
+                    if (uri != null) {
+                        JSONObject payload = new JSONObject();
+                        payload.put("authority", uri.getAuthority());
+                        payload.put("uri", uri.toString());
+                        payload.put("method", "query");
+                        
+                        IpcMonitorHelper.getInstance().report(
+                            ctx, "ContentProvider", sender, receiver, payload
+                        );
                     }
                 }
+            } catch (Exception e) {
+                Slog.e("IPC_MONITOR", "Failed to report ContentProvider IPC", e);
             }            
             // END CUSTOM IPC MONITOR
 
@@ -592,18 +470,29 @@ public abstract class ContentProvider implements ContentInterface, ComponentCall
             uri = maybeGetUriWithoutUserId(uri);
 
             // START CUSTOM IPC MONITOR
-            final Uri f_uri = uri;
-            String callingPkg = attributionSource.getPackageName();
-            boolean isSettingsProvider = "com.android.providers.settings".equals(getContext().getPackageName());
-            if (!isSettingsProvider) {
-                initMonitorObserver(getContext());
-                if (!sInSettingsCheck.get() && sMonitorEnabled && isPackageMonitored(callingPkg)) {
-                    ensureMonitorThreadStarted();
-                    if (sMonitorHandler != null) {
-                        sMonitorHandler.post(() -> reportIpcAsync(callingPkg, "insert", f_uri));
+            try {
+                Context ctx = getContext();
+                String receiver = ctx != null ? ctx.getPackageName() : "";
+                if (!"com.android.providers.settings".equals(receiver)) {
+                    
+                    IpcMonitorHelper.getInstance().ensureInitialized(ctx);
+                    
+                    String sender = attributionSource.getPackageName();
+                    
+                    if (uri != null) {
+                        JSONObject payload = new JSONObject();
+                        payload.put("authority", uri.getAuthority());
+                        payload.put("uri", uri.toString());
+                        payload.put("method", "insert");
+                        
+                        IpcMonitorHelper.getInstance().report(
+                            ctx, "ContentProvider", sender, receiver, payload
+                        );
                     }
                 }
-            }            
+            } catch (Exception e) {
+                Slog.e("IPC_MONITOR", "Failed to report ContentProvider IPC", e);
+            }             
             // END CUSTOM IPC MONITOR
 
             if (enforceWritePermission(attributionSource, uri)
@@ -718,17 +607,28 @@ public abstract class ContentProvider implements ContentInterface, ComponentCall
             uri = maybeGetUriWithoutUserId(uri);
 
             // START CUSTOM IPC MONITOR
-            final Uri f_uri = uri;
-            String callingPkg = attributionSource.getPackageName();
-            boolean isSettingsProvider = "com.android.providers.settings".equals(getContext().getPackageName());
-            if (!isSettingsProvider) {
-                initMonitorObserver(getContext());
-                if (!sInSettingsCheck.get() && sMonitorEnabled && isPackageMonitored(callingPkg)) {
-                    ensureMonitorThreadStarted();
-                    if (sMonitorHandler != null) {
-                        sMonitorHandler.post(() -> reportIpcAsync(callingPkg, "delete", f_uri));
+            try {
+                Context ctx = getContext();
+                String receiver = ctx != null ? ctx.getPackageName() : "";
+                if (!"com.android.providers.settings".equals(receiver)) {
+                    
+                    IpcMonitorHelper.getInstance().ensureInitialized(ctx);
+                    
+                    String sender = attributionSource.getPackageName();
+                    
+                    if (uri != null) {
+                        JSONObject payload = new JSONObject();
+                        payload.put("authority", uri.getAuthority());
+                        payload.put("uri", uri.toString());
+                        payload.put("method", "delete");
+                        
+                        IpcMonitorHelper.getInstance().report(
+                            ctx, "ContentProvider", sender, receiver, payload
+                        );
                     }
                 }
+            } catch (Exception e) {
+                Slog.e("IPC_MONITOR", "Failed to report ContentProvider IPC", e);
             }            
             // END CUSTOM IPC MONITOR
 
@@ -756,17 +656,28 @@ public abstract class ContentProvider implements ContentInterface, ComponentCall
             uri = maybeGetUriWithoutUserId(uri);
 
             // START CUSTOM IPC MONITOR
-            final Uri f_uri = uri;
-            String callingPkg = attributionSource.getPackageName();
-            boolean isSettingsProvider = "com.android.providers.settings".equals(getContext().getPackageName());
-            if (!isSettingsProvider) {
-                initMonitorObserver(getContext());
-                if (!sInSettingsCheck.get() && sMonitorEnabled && isPackageMonitored(callingPkg)) {
-                    ensureMonitorThreadStarted();
-                    if (sMonitorHandler != null) {
-                        sMonitorHandler.post(() -> reportIpcAsync(callingPkg, "update", f_uri));
+            try {
+                Context ctx = getContext();
+                String receiver = ctx != null ? ctx.getPackageName() : "";
+                if (!"com.android.providers.settings".equals(receiver)) {
+                    
+                    IpcMonitorHelper.getInstance().ensureInitialized(ctx);
+                    
+                    String sender = attributionSource.getPackageName();
+                    
+                    if (uri != null) {
+                        JSONObject payload = new JSONObject();
+                        payload.put("authority", uri.getAuthority());
+                        payload.put("uri", uri.toString());
+                        payload.put("method", "update");
+                        
+                        IpcMonitorHelper.getInstance().report(
+                            ctx, "ContentProvider", sender, receiver, payload
+                        );
                     }
                 }
+            } catch (Exception e) {
+                Slog.e("IPC_MONITOR", "Failed to report ContentProvider IPC", e);
             }            
             // END CUSTOM IPC MONITOR
 
@@ -841,16 +752,30 @@ public abstract class ContentProvider implements ContentInterface, ComponentCall
                     attributionSource);
             try {
                 // START CUSTOM IPC MONITOR
-                String callingPkg = attributionSource.getPackageName();
-                boolean isSettingsProvider = "com.android.providers.settings".equals(getContext().getPackageName());
-                if (!isSettingsProvider) {
-                    initMonitorObserver(getContext());
-                    if (!sInSettingsCheck.get() && sMonitorEnabled && isPackageMonitored(callingPkg)) {
-                        ensureMonitorThreadStarted();
-                        if (sMonitorHandler != null) {
-                            sMonitorHandler.post(() -> reportIpcAsync(callingPkg, method, Uri.parse("content://" + authority + (arg != null ? "/" + arg : ""))));
+                try {
+                    Context ctx = getContext();
+                    String receiver = ctx != null ? ctx.getPackageName() : "";
+                    if (!"com.android.providers.settings".equals(receiver)) {
+                        
+                        IpcMonitorHelper.getInstance().ensureInitialized(ctx);
+                        
+                        String sender = attributionSource.getPackageName();
+
+                        Uri uri = Uri.parse("content://" + authority + (arg != null ? "/" + arg : ""));
+                        
+                        if (uri != null) {
+                            JSONObject payload = new JSONObject();
+                            payload.put("authority", uri.getAuthority());
+                            payload.put("uri", uri.toString());
+                            payload.put("method", method);
+                            
+                            IpcMonitorHelper.getInstance().report(
+                                ctx, "ContentProvider", sender, receiver, payload
+                            );
                         }
                     }
+                } catch (Exception e) {
+                    Slog.e("IPC_MONITOR", "Failed to report ContentProvider IPC", e);
                 }            
                 // END CUSTOM IPC MONITOR
 
