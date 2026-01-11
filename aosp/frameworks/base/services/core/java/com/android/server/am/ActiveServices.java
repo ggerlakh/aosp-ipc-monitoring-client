@@ -1011,10 +1011,12 @@ public final class ActiveServices {
             
                 String sender = callerApp.info.packageName;
                 String receiver = r.packageName;
+                String serviceName = r.name.getClassName();
 
                 JSONObject payload = new JSONObject();
                 payload.put("action", "startService");
                 payload.put("service_type", callerFg ? "ForegroundService" : "BackgroundService");
+                payload.put("service_name", serviceName);
 
                 IpcMonitorHelper.getInstance().report(
                     mAm.mContext, "Service", sender, receiver, payload
@@ -4268,10 +4270,12 @@ public final class ActiveServices {
             
                 String sender = callerApp.info.packageName;
                 String receiver = s.packageName;
+                String serviceName = s.name.getClassName();
 
                 JSONObject payload = new JSONObject();
                 payload.put("action", "bindService");
                 payload.put("service_type", "BoundService");
+                payload.put("service_name", serviceName);
 
                 IpcMonitorHelper.getInstance().report(
                     mAm.mContext, "Service", sender, receiver, payload
@@ -4723,6 +4727,7 @@ public final class ActiveServices {
                            JSONObject payload = new JSONObject();
                            payload.put("action", "unbindService");
                            payload.put("service_type", "BoundService");
+                           payload.put("service_name", r.binding.service.shortInstanceName);
 
                            IpcMonitorHelper.getInstance().report(
                                mAm.mContext, "Service", sender, receiver, payload

@@ -35,43 +35,39 @@ adb shell dumpsys activity services
 Пример вывода данных также есть в файле `adb_shell_activity_log.txt`.  
 
 
-## Пример отправляемого JSON
+## Пример получаемых из AOSP данных в формате JSON
+
 
 ```json
 {
-  "ws_message_type": "IPC_DATA_BATCH",  // Поле для маршрутизации на сервере
-  "device_id": "android_pixel_7_uuid",
-  "sent_at": 1715420005000,
-  "events": [ // Массив событий (тот самый формат, что мы обсуждали)
-    {
-      "type": "BROADCAST",
-      "timestamp": 1715420004100,
-      "source_pkg": "com.android.systemui",
-      "target_pkg": "com.example.myapp",
-      "payload": {
-        "action": "android.intent.action.BATTERY_CHANGED",
-        "extras": {"level": 85}
-      }
+    "type": "ContentProvider",
+    "sender": "com.android.phone",
+    "receiver": "com.android.providers.telephony",
+    "payload": {
+        "authority": "telephony",
+        "uri": "content://telephony/siminfo/1",
+        "method": "update"
     },
-    {
-      "type": "SERVICE_BIND",
-      "timestamp": 1715420004200,
-      "source_pkg": "com.whatsapp",
-      "target_pkg": "com.android.contacts",
-      "payload": {
-        "service": "ContactService"
-      }
+    "timestamp": 1768083376804
+},
+{
+    "type": "Service",
+    "sender": "android",
+    "receiver": "com.android.providers.calendar",
+    "payload": {
+        "action": "bindService",
+        "service_type": "BoundService"
     },
-    {
-      "type": "PROVIDER_ACCESS",
-      "timestamp": 1715419999800,
-      "source_pkg": "com.instagram.android",
-      "target_pkg": "com.android.providers.media",
-      "payload": {
-        "authority": "media",
-        "uri": "content://media/external/images/media/123"
-    }
-  ]
+    "timestamp": 1768083381084
+},
+{
+    "type": "BroadcastReceiver",
+    "sender": "android",
+    "receiver": "*",
+    "payload": {
+        "action": "android.net.conn.DATA_ACTIVITY_CHANGE"
+    },
+    "timestamp": 1768156960530
 }
 ```
 

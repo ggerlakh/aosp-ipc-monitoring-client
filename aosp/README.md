@@ -55,16 +55,14 @@ adb logcat -s IpcMonitorReceiver
    # пример команды scp
    scp -i ~/.ssh/id_rsa_ipc_monitoring_vm <login>@<ip>:/home/<login>/aosp/out_arm/target/product/emu64a/sdk-repo-linux-system-images.zip out_arm
    # после распаковки появится директория arm64-v8a
-   #cd out_arm
-   #unzip sdk-repo-linux-system-images.zip
-   # создаем директорию с названием нашего кастомного system-image (название default, так как оно указано в файле out_arm/arm64-v8a/source.properties в поле SystemImage.TagId)
-   #mkdir -p $ANDROID_HOME/system-images/android-36/default
-   #cp -r arm64-v8a $ANDROID_HOME/system-images/android-36/default
    
    # Удаляем старую версию
    rm -rf $ANDROID_HOME/system-images/android-36/default/arm64-v8a
    # Разархивируем новую 
    unzip out_05012026_cp_patch/sdk-repo-linux-system-images.zip -d $ANDROID_HOME/system-images/android-36/default
+
+   # Или через одну команду 
+   rm -rf $ANDROID_HOME/system-images/android-36/default/arm64-v8a && rm out_05012026_cp_patch/sdk-repo-linux-system-images.zip && scp -i ~/.ssh/id_rsa_ipc_monitoring_vm glebg9@158.160.91.94:/home/glebg9/aosp/out_05012026_cp_patch/target/product/emu64a/sdk-repo-linux-system-images.zip out_05012026_cp_patch && unzip out_05012026_cp_patch/sdk-repo-linux-system-images.zip -d $ANDROID_HOME/system-images/android-36/default
    ```
    
 4. Затем нужно создать свой android virtual device (AVD), указав в нем свой только что собранный system-image ОС android
@@ -109,4 +107,6 @@ adb logcat -s IpcMonitorReceiver
     # для установки собранной APK в установленный AVD
     adb install -r app/build/outputs/apk/debug/app-debug.apk 
    ```
-6. Для пересборки изменений в `frameworks/base/core/java/android/content/ContentProvider.java` можно использовать команду `make framework-minus-apex` вместо пересборки всего проекта
+6. Пересборка изменений 
+   - Для пересборки изменений в `frameworks/base/core/java/android/content/ContentProvider.java` и `frameworks/base/core/java/com/android/internal/util/IpcMonitorHelper.java` можно использовать команду `make framework-minus-apex` вместо пересборки всего проекта
+   - Для пересборки изменений в `frameworks/base/services/core/java/com/android/server/am/ActiveServices.java` и `frameworks/base/services/core/java/com/android/server/am/BroadcastController.java` можно использовать команду `make services` вместо пересборки всего проекта
