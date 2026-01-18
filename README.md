@@ -2,8 +2,9 @@
 
 Мониторинг IPC взаимодействий в android
 
-* `IPCMonitorClient` - Android Studio проект клиенсткого приложения на kotlin для получения данных об IPC взаимодействиях от Android
 * `aosp` - Патч исходного кода ОС android (AOSP) для получения данных об IPC взаимодействиях
+* `IPCMonitorClient` - Android Studio проект клиенсткого приложения на kotlin для получения данных об IPC взаимодействиях (`ContentProvider` и `Service`, `BroadcastReceiver`) от пропатченного ядра AOSP
+* `TestAndroidIPCApps` - папка с двумя тестовыми приложениями (также Android Studio проекты на kotlin) которые используются для демонстранции мониторинга IPC взаимодействий в `IPCMonitorClient`
 
 ## Извлечение данных
 
