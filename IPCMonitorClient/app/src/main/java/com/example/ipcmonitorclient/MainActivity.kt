@@ -1,162 +1,136 @@
 package com.example.ipcmonitorclient
 
-import android.content.BroadcastReceiver
-import android.content.Context
-import android.content.Intent
 import android.content.IntentFilter
-import android.graphics.Color
 import android.os.Bundle
-import android.provider.Settings
-import android.text.method.ScrollingMovementMethod
-import android.util.Log
-import android.widget.*
+import android.view.View
 import androidx.appcompat.app.AppCompatActivity
+import com.example.ipcmonitorclient.databinding.ActivityMainBinding
 import org.json.JSONObject
-import java.text.SimpleDateFormat
-import java.util.Date
-import java.util.Locale
+import android.provider.Settings
+import android.widget.Toast
+import android.graphics.Color
+import android.content.Context
 
+class MainActivity : AppCompatActivity(), IpcWebSocketListener {
 
-class IpcMonitorReceiver(
-    private val onDataReceived: (JSONObject) -> Unit
-) : BroadcastReceiver() {
-
-    companion object {
-        const val ACTION_IPC_MONITOR = "com.custom.aosp.IPC_MONITOR_EVENT"
-        private const val TAG = "IpcMonitorReceiver"
-    }
-
-    override fun onReceive(context: Context?, intent: Intent?) {
-        if (intent?.action == ACTION_IPC_MONITOR) {
-            val jsonRaw = intent.getStringExtra("ipc_data")
-
-            Log.d(TAG, "Processing IpcMonitorReceiver.onReceive, jsonRaw = ${jsonRaw}")
-
-            if (jsonRaw != null) {
-                try {
-                    val jsonObject = JSONObject(jsonRaw)
-                    // Передаем распарсенный объект во внешний обработчик
-                    onDataReceived(jsonObject)
-                } catch (e: Exception) {
-                    Log.e(TAG, "Ошибка парсинга IPC JSON: ${e.message}")
-                }
-            }
-        }
-    }
-}
-class MainActivity : AppCompatActivity() {
-
-    private lateinit var logTextView: TextView
-    private lateinit var scrollView: ScrollView
-    private lateinit var etTargetPackages: EditText
-    private lateinit var swMonitor: Switch
-
-    private var ipcMonitorReceiver: IpcMonitorReceiver? = null
+    private lateinit var binding: ActivityMainBinding
+    private lateinit var wsManager: WebSocketManager
+    private var ipcReceiver: IpcMonitorReceiver? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        binding = ActivityMainBinding.inflate(layoutInflater)
+        setContentView(binding.root)
+
+        wsManager = WebSocketManager(this)
+
+        ipcReceiver = IpcMonitorReceiver { jsonObject ->
+            processAndDisplayData(jsonObject)
+        }
+
         setupUI()
-
-        // 1. Привязываем логику ресивера к UI
-        ipcMonitorReceiver = IpcMonitorReceiver { json ->
-            renderIpcEvent(json)
-        }
-
-        // 2. Логика управления настройками AOSP
-        swMonitor.setOnCheckedChangeListener { _, isChecked ->
-            saveSettings(isChecked, etTargetPackages.text.toString())
-            val status = if (isChecked) "ON" else "OFF"
-            Toast.makeText(this, "Monitor $status", Toast.LENGTH_SHORT).show()
-        }
-    }
-
-    private fun saveSettings(enabled: Boolean, packages: String) {
-        try {
-            val resolver = contentResolver
-            // Записываем флаг включения
-            Settings.Global.putInt(resolver, "ipc_monitor_enabled", if (enabled) 1 else 0)
-            // Записываем список пакетов (например: "com.android.gallery3d,com.android.contacts")
-            Settings.Global.putString(resolver, "ipc_monitor_targets", packages.ifEmpty { "*" })
-        } catch (e: Exception) {
-            Toast.makeText(this, "Error! ${e}", Toast.LENGTH_LONG).show()
-        }
-    }
-
-    private fun renderIpcEvent(json: JSONObject) {
-        runOnUiThread {
-            val type = json.optString("type")
-            val sender = json.optString("sender")
-            val receiver = json.optString("receiver")
-            val payload = json.optJSONObject("payload")
-            val uri = payload?.optString("uri") ?: "no-uri"
-            val timestamp = json.optLong("timestamp")
-
-            val time = SimpleDateFormat("HH:mm:ss", Locale.getDefault()).format(Date(timestamp))
-
-            // Формируем красивый лог
-            val entry = "[$time] TYPE $type \n" +
-                    "FROM: $sender\n" +
-                    "TO:   $receiver\n" +
-                    "payload:  $payload\n" +
-                    "---------------------------\n"
-
-            logTextView.append(entry)
-
-            // Автопрокрутка вниз
-            scrollView.post { scrollView.fullScroll(ScrollView.FOCUS_DOWN) }
-        }
-    }
-
-    override fun onStart() {
-        super.onStart()
-        ipcMonitorReceiver?.let {
-            registerReceiver(it, IntentFilter("com.custom.aosp.IPC_MONITOR_EVENT"), Context.RECEIVER_EXPORTED)
-        }
-    }
-
-    override fun onStop() {
-        super.onStop()
-        ipcMonitorReceiver?.let { unregisterReceiver(it) }
+        setupIpcReceiver()
     }
 
     private fun setupUI() {
-        val root = LinearLayout(this).apply {
-            orientation = LinearLayout.VERTICAL
-            setPadding(30, 500, 30, 30)
+        // WebSocket Connect
+        binding.btnConnect.setOnClickListener {
+            val url = binding.etUrl.text.toString()
+            if (wsManager.isSocketConnected()) {
+                wsManager.disconnect()
+            } else {
+                if (url.isNotEmpty()) wsManager.connect(url)
+            }
         }
 
-        swMonitor = Switch(this).apply {
-            text = "Enable IPC Monitoring "
-            textSize = 18f
+        // Инициализация Switch (читаем текущее состояние из Settings.Global)
+        try {
+            val currentStatus = Settings.Global.getInt(contentResolver, "ipc_monitor_enabled", 0)
+            val currentPackages = Settings.Global.getString(contentResolver, "ipc_monitor_targets") ?: "*"
+
+            binding.swAospMonitor.isChecked = (currentStatus == 1)
+//            if (currentPackages.isNotEmpty() && currentPackages != "*") {
+            if (currentPackages.isNotEmpty()) {
+                binding.etFilter.setText(currentPackages)
+            }
+        } catch (e: SecurityException) {
+            appendLogSystem("Error reading settings: Need WRITE_SECURE_SETTINGS permission!")
         }
 
-        etTargetPackages = EditText(this).apply {
-            hint = "Target packages (comma separated or *)"
-            setText("*")
+        // Слушатель переключения Switch
+        binding.swAospMonitor.setOnCheckedChangeListener { _, isChecked ->
+            // Берем текст из поля фильтра как список пакетов
+            val packages = binding.etFilter.text.toString().trim()
+
+            // Сохраняем в системные настройки
+            saveSettings(isChecked, packages)
+
+            val stateText = if (isChecked) "ENABLED" else "DISABLED"
+            appendLogSystem("Monitor $stateText for targets: ${packages.ifEmpty { "ALL" }}")
+        }
+    }
+
+    /**
+     * Метод для записи настроек в системную таблицу Settings.Global
+     */
+    private fun saveSettings(enabled: Boolean, packages: String) {
+        try {
+            val resolver = contentResolver
+            // Записываем флаг включения (1 или 0)
+            Settings.Global.putInt(resolver, "ipc_monitor_enabled", if (enabled) 1 else 0)
+
+            // Записываем список пакетов (если пусто -> "*")
+            Settings.Global.putString(resolver, "ipc_monitor_targets", packages.ifEmpty { "*" })
+
+        } catch (e: Exception) {
+            val errorMsg = "Failed to save settings: ${e.message}"
+            Toast.makeText(this, errorMsg, Toast.LENGTH_LONG).show()
+            appendLogSystem(errorMsg)
+        }
+    }
+
+    private fun processAndDisplayData(json: JSONObject) {
+        val uiText = IpcDataProcessor.formatForUi(json)
+        val prefix = if (wsManager.isSocketConnected()) "[WS:LIVE]" else "[WS:OFF]"
+
+        runOnUiThread {
+            binding.tvLogs.append("\n----------------\n$prefix $uiText")
+            binding.scrollView.post { binding.scrollView.fullScroll(View.FOCUS_DOWN) }
         }
 
-        val btnClear = Button(this).apply {
-            text = "Clear Logs"
-            setOnClickListener { logTextView.text = "" }
-        }
+        wsManager.send(json.toString())
+    }
 
-        scrollView = ScrollView(this).apply {
-            layoutParams = LinearLayout.LayoutParams(
-                LinearLayout.LayoutParams.MATCH_PARENT, 0, 1f
-            )
+    private fun appendLogSystem(msg: String) {
+        runOnUiThread {
+            binding.tvLogs.append("\n>>> SYSTEM: $msg")
+            binding.scrollView.post { binding.scrollView.fullScroll(View.FOCUS_DOWN) }
         }
+    }
 
-        logTextView = TextView(this).apply {
-            textSize = 12f
-            setTextColor(Color.BLACK)
-            movementMethod = ScrollingMovementMethod()
+    private fun setupIpcReceiver() {
+        val filter = IntentFilter(IpcMonitorReceiver.ACTION_IPC_MONITOR)
+        registerReceiver(ipcReceiver, filter, Context.RECEIVER_EXPORTED)
+    }
+
+    // --- WebSocket Callbacks ---
+    override fun onStatusChanged(connected: Boolean) {
+        runOnUiThread {
+            if (connected) {
+                binding.tvStatus.text = "Status: Connected"
+                binding.tvStatus.setTextColor(Color.GREEN)
+                binding.btnConnect.text = "Disconnect"
+            } else {
+                binding.tvStatus.text = "Status: Disconnected"
+                binding.tvStatus.setTextColor(Color.GRAY)
+                binding.btnConnect.text = "Connect"
+            }
         }
+    }
 
-        root.addView(swMonitor)
-        root.addView(etTargetPackages)
-        root.addView(btnClear)
-        scrollView.addView(logTextView)
-        root.addView(scrollView)
-        setContentView(root)
+    override fun onDestroy() {
+        super.onDestroy()
+        unregisterReceiver(ipcReceiver)
+        wsManager.disconnect()
     }
 }

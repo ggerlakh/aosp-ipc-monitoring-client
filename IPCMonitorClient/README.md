@@ -26,7 +26,7 @@
 - Команды для тестирования обработки IPC взаимодействий
   ```bash
   # Для тестирования обработки ContentProvider IPC
-  adb shell content query --uri content://com.android.contacts/data/phones --projection display_name:data1
+  adb shell content query --uri content://contacts/people
   # Для тестирования обработки Service IPC
   adb shell am start-foreground-service -n com.android.systemui/.keyguard.KeyguardService
   # Для тестирования обработки BroadcastReciever IPC
