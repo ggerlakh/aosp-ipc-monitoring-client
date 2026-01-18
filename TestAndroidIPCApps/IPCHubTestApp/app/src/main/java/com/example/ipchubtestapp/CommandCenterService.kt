@@ -15,6 +15,7 @@ class CommandCenterService : Service() {
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
         val cmd = intent?.getStringExtra("command") ?: "PING"
         val message = "IPC Service Start: Received command $cmd"
+        Log.d("Hub", message)
         runBroadcastIPC()
         return START_NOT_STICKY
     }

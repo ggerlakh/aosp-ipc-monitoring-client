@@ -1,7 +1,6 @@
 # Android Studio проект клиенсткого приложения на kotlin для получения данных об IPC взаимодействиях от Android
 
-Само приложение устроено следующим образом: данные об IPC взаимодействиях предполагается получать от Android также через IPC взаимодействие `BroadcastReceiver`.  
-На данный момент реализовано через патч в директории `aosp` только получение информации о `ContentProvider` и `Service`, `BroadcastReceiver` IPC.  
+Само приложение устроено следующим образом: данные об IPC взаимодействиях (`ContentProvider`, `Service`, `BroadcastReceiver`) получаются от Android также через IPC взаимодействие `BroadcastReceiver`, визуализируются в приложении и при использовании соответствующей опции, через Websocket отправляются на указанный сервер для сбора и обработки данных.
 
 ## Полезные команды для запуска
 
@@ -39,13 +38,22 @@
 
   ```
 
-## Примеры получаемых данных
+Пример запущенного клиента для мониторинга IPC взаимодействий (`ContentProvider` и `Service`, `BroadcastReceiver`) с пропатченным исходным кодом AOSP.  
 
-Пример базовой реализации 
+![example1](../img/updated_ipc_monitor_client_example.png)
 
-![example1](../img/contentprovider_service_example.png)
---------
-![example2](../img/broadcast_intercept_example.png)
+- В первом верхнем текстовом поле указывается адрес для подключения к серверу по протоколу Websocket для отправки полученных данных. Рядом находится кнопка для подключения/отключения к серверу.
+- Во втором текстовом поле указывается фильтр для наблюдаемых приложений (`packages`) через зяпятую (пример: `com.example.ipchubtestapp,com.example.ipcmonitorclient`). События по IPC мониторингу попадают в фильтр, если в IPC взаимодействии указанный пакет присутствует в качестве `sender` **или** в качестве `receiver`.  
+- Ниже располагается переключатель с возможностью включить/выключить отправку событий об IPC от Android (информация в Android передается через глобальные настройки системы).  
+- И еще ниже, большую часть экрана занимает отображение полученных IPC событий от android
+
+## Запуск тестовых приложений для демонстрации получения данных об IPC взаимодействиях
+
+Для тестирования и демонистрации работы приложения `IPCMonitorClient`, были подготовлены еще два простых android приложения из папки [TestAndroidIPCApps](../TestAndroidIPCApps), которые обмениваются IPC взаимодействиями (`ContentProvider`, `Service`, `BroadcastReceiver`):
+- [IPCHubTestApp](../TestAndroidIPCApps/IPCHubTestApp/) - тестовое приложение, представляющее собой Hub server, в котором реализованы `Service` и `ContentProvider`, при обращении `IPCCallerTestApp` для запуска соответствующего `Service`, оправляется `BroadcastReceiver` отправителю, при обращении к `ContentProvider` отдает соответствующие подготовленные данные. 
+- [IPCCallerTestApp](../TestAndroidIPCApps/IPCCallerTestApp/) - тестовое приложение, имитирующее инициатора IPС взаимодействий с Hub Server. Раз в 15 секунд, отправляет к `IPCHubTestApp` запрос на запуск соответствующего `Service` и получение данных от `ContentProvider`. При получении `BroadcastReceiver` от `IPCHubTestApp` показывает Toast-уведомление на соответствующем экране. 
+
+## Формат получаемых данных от Android
 
 Пример получаемого от Android JSON о `ContentProvider`, `Serivce` и `BroadcastReceiver` IPC:
 ```json
