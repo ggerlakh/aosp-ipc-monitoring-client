@@ -40,7 +40,7 @@
 
 Пример запущенного клиента для мониторинга IPC взаимодействий (`ContentProvider` и `Service`, `BroadcastReceiver`) с пропатченным исходным кодом AOSP.  
 
-![example1](../img/updated_ipc_monitor_client_example.png)
+<img src="../img/updated_ipc_monitor_client_example.png" width="400" height="800">
 
 - В первом верхнем текстовом поле указывается адрес для подключения к серверу по протоколу Websocket для отправки полученных данных. Рядом находится кнопка для подключения/отключения к серверу.
 - Во втором текстовом поле указывается фильтр для наблюдаемых приложений (`packages`) через зяпятую (пример: `com.example.ipchubtestapp,com.example.ipcmonitorclient`). События по IPC мониторингу попадают в фильтр, если в IPC взаимодействии указанный пакет присутствует в качестве `sender` **или** в качестве `receiver`.  
@@ -51,7 +51,9 @@
 
 Для тестирования и демонистрации работы приложения `IPCMonitorClient`, были подготовлены еще два простых android приложения из папки [TestAndroidIPCApps](../TestAndroidIPCApps), которые обмениваются IPC взаимодействиями (`ContentProvider`, `Service`, `BroadcastReceiver`):
 - [IPCHubTestApp](../TestAndroidIPCApps/IPCHubTestApp/) - тестовое приложение, представляющее собой Hub server, в котором реализованы `Service` и `ContentProvider`, при обращении `IPCCallerTestApp` для запуска соответствующего `Service`, оправляется `BroadcastReceiver` отправителю, при обращении к `ContentProvider` отдает соответствующие подготовленные данные. 
+  <img src="../img/test_server_hub_example.png" width="400" height="800">
 - [IPCCallerTestApp](../TestAndroidIPCApps/IPCCallerTestApp/) - тестовое приложение, имитирующее инициатора IPС взаимодействий с Hub Server. Раз в 15 секунд, отправляет к `IPCHubTestApp` запрос на запуск соответствующего `Service` и получение данных от `ContentProvider`. При получении `BroadcastReceiver` от `IPCHubTestApp` показывает Toast-уведомление на соответствующем экране. 
+  <img src="../img/test_caller_app_example.png" width="400" height="800">
 
 ## Формат получаемых данных от Android
 
