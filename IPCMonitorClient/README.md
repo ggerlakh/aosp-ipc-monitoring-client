@@ -51,9 +51,9 @@
 
 Для тестирования и демонистрации работы приложения `IPCMonitorClient`, были подготовлены еще два простых android приложения из папки [TestAndroidIPCApps](../TestAndroidIPCApps), которые обмениваются IPC взаимодействиями (`ContentProvider`, `Service`, `BroadcastReceiver`):
 - [IPCHubTestApp](../TestAndroidIPCApps/IPCHubTestApp/) - тестовое приложение, представляющее собой Hub server, в котором реализованы `Service` и `ContentProvider`, при обращении `IPCCallerTestApp` для запуска соответствующего `Service`, оправляется `BroadcastReceiver` отправителю, при обращении к `ContentProvider` отдает соответствующие подготовленные данные. 
-  ![IPCHubTestApp_example](../img/test_server_hub_example.png)
+  <img src="../img/test_server_hub_example.png" width="400" height="800">
 - [IPCCallerTestApp](../TestAndroidIPCApps/IPCCallerTestApp/) - тестовое приложение, имитирующее инициатора IPС взаимодействий с Hub Server. Раз в 15 секунд, отправляет к `IPCHubTestApp` запрос на запуск соответствующего `Service` и получение данных от `ContentProvider`. При получении `BroadcastReceiver` от `IPCHubTestApp` показывает Toast-уведомление на соответствующем экране. 
-  ![IPCHubTestApp_example](../img/test_caller_app_example.png)
+  <img src="../img/test_caller_app_example.png" width="400" height="800">
 
 ## Формат получаемых данных от Android
 
