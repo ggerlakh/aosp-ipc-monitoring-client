@@ -45,8 +45,8 @@ class MainActivity : AppCompatActivity(), IpcWebSocketListener {
 
         // Инициализация Switch (читаем текущее состояние из Settings.Global)
         try {
-            val currentStatus = Settings.Global.getInt(contentResolver, "ipc_monitor_enabled", 0)
-            val currentPackages = Settings.Global.getString(contentResolver, "ipc_monitor_targets") ?: "*"
+            val currentStatus = Settings.Global.getInt(contentResolver, "itmo_yandex.ipc.monitoring_enabled", 0)
+            val currentPackages = Settings.Global.getString(contentResolver, "itmo_yandex.ipc.monitoring_packages") ?: "*"
 
             binding.swAospMonitor.isChecked = (currentStatus == 1)
 //            if (currentPackages.isNotEmpty() && currentPackages != "*") {
@@ -77,10 +77,10 @@ class MainActivity : AppCompatActivity(), IpcWebSocketListener {
         try {
             val resolver = contentResolver
             // Записываем флаг включения (1 или 0)
-            Settings.Global.putInt(resolver, "ipc_monitor_enabled", if (enabled) 1 else 0)
+            Settings.Global.putInt(resolver, "itmo_yandex.ipc.monitoring_enabled", if (enabled) 1 else 0)
 
             // Записываем список пакетов (если пусто -> "*")
-            Settings.Global.putString(resolver, "ipc_monitor_targets", packages.ifEmpty { "*" })
+            Settings.Global.putString(resolver, "itmo_yandex.ipc.monitoring_packages", packages.ifEmpty { "*" })
 
         } catch (e: Exception) {
             val errorMsg = "Failed to save settings: ${e.message}"

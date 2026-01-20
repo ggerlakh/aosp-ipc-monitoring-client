@@ -99,9 +99,9 @@ public class IpcMonitorHelper {
             };
 
             context.getContentResolver().registerContentObserver(
-                    Settings.Global.getUriFor("ipc_monitor_enabled"), false, observer);
+                    Settings.Global.getUriFor("itmo_yandex.ipc.monitoring_enabled"), false, observer);
             context.getContentResolver().registerContentObserver(
-                    Settings.Global.getUriFor("ipc_monitor_targets"), false, observer);
+                    Settings.Global.getUriFor("itmo_yandex.ipc.monitoring_packages"), false, observer);
 
             mHandler.post(() -> updateSettings(context));
             mObserverRegistered = true;
@@ -113,8 +113,8 @@ public class IpcMonitorHelper {
         
         try {
             mRecursionGuard.set(true);
-            mEnabled = Settings.Global.getInt(context.getContentResolver(), "ipc_monitor_enabled", 0) == 1;
-            mTargetPackages = Settings.Global.getString(context.getContentResolver(), "ipc_monitor_targets");
+            mEnabled = Settings.Global.getInt(context.getContentResolver(), "itmo_yandex.ipc.monitoring_enabled", 0) == 1;
+            mTargetPackages = Settings.Global.getString(context.getContentResolver(), "itmo_yandex.ipc.monitoring_packages");
             if (mTargetPackages == null) mTargetPackages = "*";
         } catch (Exception e) {
             Slog.e(TAG, "Failed to report ContentProvider interaction", e);
