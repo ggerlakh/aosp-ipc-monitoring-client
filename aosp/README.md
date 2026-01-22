@@ -8,8 +8,6 @@
 // END CUSTOM IPC MONITOR
 ```
 
-##  Инструкция по сборке AOSP и локальном запуске собранного образа ОС в Android Studio на macbook air M2
-
 Вся полезная информация про андроид разаботку есть на https://source.android.com/docs/setup?hl=ru 
 
 Требуется установка IDE Android Studio (на том же сайте можно установить)
@@ -24,7 +22,9 @@ adb logcat -s IPC_MONITOR
 adb logcat -s IpcMonitorReceiver
 ```
 
+##  Инструкция по сборке AOSP и локальном запуске собранного образа ОС в Android Studio на macbook air M2
 
+В архиве [sdk-repo-linux-system-images.zip](./sdk-repo-linux-system-images.zip) уже есть пример собранного пропатченного образа AOSP для архитектуры arm64 (инструкции по его запуску есть ниже, начиная с п.3), но если нужно с нуля собрать образ с изменениями AOSP, то ниже в инструкции показано как это сделать: 
 1. Если на машине/сервере/ноутбуке еще не скачаны исходники aosp, его нужно скачать следуя вот этой инструкции https://source.android.com/docs/setup/download?hl=ru 
 2. <*Перед этим шагом предполагается внесение изменений в исходный код aosp для создания и тестирования "своей" сборки*> Следующим шагом, нужно будет собрать образ Android под указанный "таргет" (с учетом архитектуры целевого устройства на котором предполагается осуществлять запуск, в случае с macbook M2 это будет arm64)
    ```bash
@@ -32,13 +32,16 @@ adb logcat -s IpcMonitorReceiver
    source build/envsetup.sh
    # опционально, указать другую директорию с артикфатами сборки aosp (по умолчанию "out")
    export OUT_DIR="out_05012026_cp_patch"
-   lunch sdk_phone64_arm64-aosp_current-userdebug # сборка под arm64
+   lunch sdk_phone64_arm64-aosp_current-userdebug # сборка под arm64, информация про другие таргеты есть в https://source.android.com/docs/setup/build/building?hl=ru
    m
    # для генериации zip архива с avd для android studio
    make emu_img_zip
    # результат сборки в виде архива сохраняется по этому пути
    ls -l aosp/out_arm/target/product/emu64a/sdk-repo-linux-system-images.zip
    ```
+   Если сборка всего проекта уже была и нужно пересобрать только измененные файлы для патча, то можно использовать следующие команды вместо пересборки всего проекта через команду `m`:
+   - Для пересборки изменений в `frameworks/base/core/java/android/content/ContentProvider.java` и `frameworks/base/core/java/com/android/internal/util/IpcMonitorHelper.java` можно использовать команду `make framework-minus-apex` вместо пересборки всего проекта
+   - Для пересборки изменений в `frameworks/base/services/core/java/com/android/server/am/ActiveServices.java` и `frameworks/base/services/core/java/com/android/server/am/BroadcastController.java` можно использовать команду `make services` вместо пересборки всего проекта
 3. Далее нужно скопировать собранный архив к себе локально (например через scp) и положить его по нужному пути в system-images для android SDK
    
    Предварительно рекомендуется себе экспортировать следующие переменные в .zshrc/.bashrc
@@ -62,7 +65,7 @@ adb logcat -s IpcMonitorReceiver
    unzip out_05012026_cp_patch/sdk-repo-linux-system-images.zip -d $ANDROID_HOME/system-images/android-36/default
 
    # Или через одну команду 
-   rm -rf $ANDROID_HOME/system-images/android-36/default/arm64-v8a && rm out_05012026_cp_patch/sdk-repo-linux-system-images.zip && scp -i ~/.ssh/id_rsa_ipc_monitoring_vm glebg9@158.160.91.94:/home/glebg9/aosp/out_05012026_cp_patch/target/product/emu64a/sdk-repo-linux-system-images.zip out_05012026_cp_patch && unzip out_05012026_cp_patch/sdk-repo-linux-system-images.zip -d $ANDROID_HOME/system-images/android-36/default
+   rm -rf $ANDROID_HOME/system-images/android-36/default/arm64-v8a && rm out_05012026_cp_patch/sdk-repo-linux-system-images.zip && scp -i ~/.ssh/id_rsa_ipc_monitoring_vm <login>@<ip>:/home/<login>/aosp/out_05012026_cp_patch/target/product/emu64a/sdk-repo-linux-system-images.zip out_05012026_cp_patch && unzip out_05012026_cp_patch/sdk-repo-linux-system-images.zip -d $ANDROID_HOME/system-images/android-36/default
    ```
    
 4. Затем нужно создать свой android virtual device (AVD), указав в нем свой только что собранный system-image ОС android
@@ -107,6 +110,3 @@ adb logcat -s IpcMonitorReceiver
     # для установки собранной APK в установленный AVD
     adb install -r app/build/outputs/apk/debug/app-debug.apk 
    ```
-6. Пересборка изменений 
-   - Для пересборки изменений в `frameworks/base/core/java/android/content/ContentProvider.java` и `frameworks/base/core/java/com/android/internal/util/IpcMonitorHelper.java` можно использовать команду `make framework-minus-apex` вместо пересборки всего проекта
-   - Для пересборки изменений в `frameworks/base/services/core/java/com/android/server/am/ActiveServices.java` и `frameworks/base/services/core/java/com/android/server/am/BroadcastController.java` можно использовать команду `make services` вместо пересборки всего проекта
