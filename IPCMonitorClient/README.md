@@ -48,7 +48,10 @@
     --ez "flag" true \
     --esa "array" "one,two,three" \
     -c "android.intent.category.TEST"
-
+  ```
+  Также для тестирования IPC взаимодействий между текущими установленными приложениями в системе, можно еще запустить monkey testing через adb со случайными событиями и нажатиями кнопок в разных приложениях
+  ```bash
+  adb shell monkey --pct-syskeys 0 --throttle 500 -v 500
   ```
 
 ## Запуск тестовых приложений для демонстрации получения данных об IPC взаимодействиях
@@ -58,6 +61,11 @@
   <img src="../img/test_server_hub_example.png" width="400" height="800">
 - [IPCCallerTestApp](../TestAndroidIPCApps/IPCCallerTestApp/) - тестовое приложение, имитирующее инициатора IPС взаимодействий с Hub Server. Раз в 15 секунд, отправляет к `IPCHubTestApp` запрос на запуск соответствующего `Service` и получение данных от `ContentProvider`. При получении `BroadcastReceiver` от `IPCHubTestApp` показывает Toast-уведомление на соответствующем экране. 
   <img src="../img/test_caller_app_example.png" width="400" height="800">
+
+Для установки тестового приложения на устройство через adb, нужно перейти в соответствующую директорию и выполнить команду:
+```bash
+./gradlew assembleDebug && adb install -r app/build/outputs/apk/debug/app-debug.apk
+```
 
 ## Формат получаемых данных от Android
 
