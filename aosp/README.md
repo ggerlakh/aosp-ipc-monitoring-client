@@ -39,7 +39,7 @@ adb logcat -s IpcMonitorReceiver
    # результат сборки в виде архива сохраняется по этому пути
    ls -l aosp/out_arm/target/product/emu64a/sdk-repo-linux-system-images.zip
    ```
-   Если сборка всего проекта уже была и нужно пересобрать только измененные файлы для патча, то моэно использовать следующие команды вместо пересборки всего проекта через команду `m`:
+   Если сборка всего проекта уже была и нужно пересобрать только измененные файлы для патча, то можно использовать следующие команды вместо пересборки всего проекта через команду `m`:
    - Для пересборки изменений в `frameworks/base/core/java/android/content/ContentProvider.java` и `frameworks/base/core/java/com/android/internal/util/IpcMonitorHelper.java` можно использовать команду `make framework-minus-apex` вместо пересборки всего проекта
    - Для пересборки изменений в `frameworks/base/services/core/java/com/android/server/am/ActiveServices.java` и `frameworks/base/services/core/java/com/android/server/am/BroadcastController.java` можно использовать команду `make services` вместо пересборки всего проекта
 3. Далее нужно скопировать собранный архив к себе локально (например через scp) и положить его по нужному пути в system-images для android SDK
