@@ -8,7 +8,7 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         val tv = TextView(this).apply {
-            text = "HUB SERVER: Ожидание IPC запросов...\n\nЗдесь будут отображаться системные логи при взаимодействии."
+            text = "HUB SERVER: Ожидание IPC запросов..."
             textSize = 18f
             setPadding(50, 500, 50, 50)
         }
