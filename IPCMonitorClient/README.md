@@ -53,6 +53,7 @@
   ```bash
   adb shell monkey --pct-syskeys 0 --throttle 500 -v 500
   ```
+  Результат запуска monkey testing представлен в файле [monkey_logs.json](./monkey_logs.json)
 
 ## Запуск тестовых приложений для демонстрации получения данных об IPC взаимодействиях
 
