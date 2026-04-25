@@ -7,12 +7,22 @@
 ...
 // END CUSTOM IPC MONITOR
 ```
+Ниже представлены описания к измененным файлам в коде AOSP:
+- [IpcMonitorHelper.java](https://github.com/ggerlakh/aosp-ipc-monitoring-client/tree/main/aosp/frameworks/base/core/java/com/android/internal/util) - Общая логика по отправке событий об IPC взаимодействиях клиенту вынесена в отдельный Singleton, вызовы методов которого внедряются в соответствующие места для перехвата Service, ContentProvider и BroadcastReceiver взаимодействий.  
+  ![class-diagram](../img/IpcMonitorHelper-class-diagram.png)
+  * Использование системных Broadcast-сообщений для передачи перехваченных данных в приложение-монитор от модифицированной ОС.
+  * Управление конфигурацией мониторинга при помощи глобальных настроек
+    * Включение отправки перехваченных данных от ОС к приложению через флаг (mEnabled)
+    * Фильтрация данных по наблюдаемым приложениям перечисленных в строковом поле (mTargetPackages)
+- [ContentProvider.java](https://github.com/ggerlakh/aosp-ipc-monitoring-client/blob/main/aosp/frameworks/base/core/java/android/content/ContentProvider.java) - Интеграция объекта-перехватичка для перехвата IPC событий связанных с компонентом ContentProvider.
+- [ActiveServices.java](https://github.com/ggerlakh/aosp-ipc-monitoring-client/blob/main/aosp/frameworks/base/services/core/java/com/android/server/am/ActiveServices.java) - Интеграция объекта-перехватичка для перехвата IPC событий связанных с компонентом Service.
+- [BroadcastController.java](https://github.com/ggerlakh/aosp-ipc-monitoring-client/blob/main/aosp/frameworks/base/services/core/java/com/android/server/am/BroadcastController.java) - Интеграция объекта-перехватичка для перехвата IPC событий связанных с компонентом BroadcastReceiver.
 
-Вся полезная информация про андроид разаботку есть на https://source.android.com/docs/setup?hl=ru 
+##  Инструкция по сборке AOSP и локальном запуске собранного образа ОС в Android Studio на macbook air M2
 
-Требуется установка IDE Android Studio (на том же сайте можно установить)
-
-Полезная команда для дебага на эмуляторе 
+Вся полезная информация про андроид разаботку есть на https://source.android.com/docs/setup?hl=ru.  
+Для работы с кодом Android-приложения и с кодом AOSP может потребоваться установка IDE Android Studio (на том же сайте можно установить).  
+Полезные команды для дебага на эмуляторе:
 ```bash
 # Просмотр всех логов в ОС
 adb shell logcat
@@ -21,8 +31,6 @@ adb logcat -s IPC_MONITOR
 # Просмотр клиентских логов связанных с обработкой данных об IPC от ОС
 adb logcat -s IpcMonitorReceiver
 ```
-
-##  Инструкция по сборке AOSP и локальном запуске собранного образа ОС в Android Studio на macbook air M2
 
 В архиве [sdk-repo-linux-system-images.zip](./sdk-repo-linux-system-images.zip) уже есть пример собранного пропатченного образа AOSP для архитектуры arm64 (инструкции по его запуску есть ниже, начиная с п.3), но если нужно с нуля собрать образ с изменениями AOSP, то ниже в инструкции показано как это сделать: 
 1. Если на машине/сервере/ноутбуке еще не скачаны исходники aosp, его нужно скачать следуя вот этой инструкции https://source.android.com/docs/setup/download?hl=ru 
