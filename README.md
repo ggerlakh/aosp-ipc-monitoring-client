@@ -7,9 +7,9 @@
 ![component-diagram](./img/aosp-ipc-monitoring-component-diagram.png)
 
 Структура репозитория:
-* `aosp` - Патч исходного кода ОС android (AOSP) для получения данных об IPC взаимодействиях.
+* `aosp` - Патч исходного кода ОС android (AOSP) для получения данных об IPC взаимодействиях.  
   Документация по сборке модифицированной версии AOSP и об внесенных изменениях описана вот [здесь](https://github.com/ggerlakh/aosp-ipc-monitoring-client/tree/main/aosp)
-* `IPCMonitorClient` - Android Studio проект клиенсткого приложения на kotlin для получения данных об IPC взаимодействиях (`ContentProvider` и `Service`, `BroadcastReceiver`) от пропатченного ядра AOSP.
+* `IPCMonitorClient` - Android Studio проект клиенсткого приложения на kotlin для получения данных об IPC взаимодействиях (`ContentProvider` и `Service`, `BroadcastReceiver`) от пропатченного ядра AOSP.  
   Документация по реализованному Android приложению-монитору, которое работает в связке с модифированным кодом AOSP, описана вот [здесь](https://github.com/ggerlakh/aosp-ipc-monitoring-client/tree/main/IPCMonitorClient).
 * `TestAndroidIPCApps` - папка с двумя тестовыми приложениями (также Android Studio проекты на kotlin) которые используются для демонстранции мониторинга IPC взаимодействий в `IPCMonitorClient`.
 
