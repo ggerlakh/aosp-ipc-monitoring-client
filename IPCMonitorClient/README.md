@@ -61,6 +61,7 @@
 - [IPCHubTestApp](../TestAndroidIPCApps/IPCHubTestApp/) - тестовое приложение, представляющее собой Hub server, в котором реализованы `Service` и `ContentProvider`, при обращении `IPCCallerTestApp` для запуска соответствующего `Service`, оправляется `BroadcastReceiver` отправителю, при обращении к `ContentProvider` отдает соответствующие подготовленные данные. 
   <img src="../img/test_server_hub_example.png" width="400" height="800">
 - [IPCCallerTestApp](../TestAndroidIPCApps/IPCCallerTestApp/) - тестовое приложение, имитирующее инициатора IPС взаимодействий с Hub Server. При нажатии на соответствующие кнопки в интерфейсе, отправляются запросы к `IPCHubTestApp`: методы `query`, `insert`, `update`, `delete`, `call` в ContentProvider и методы `startService`, `bindService` и `unbindService` для взаимодействия с комопнентом Service. При получении `BroadcastReceiver` от `IPCHubTestApp`, после запуска Service через `startService`, показывает Toast-уведомление на соответствующем экране. 
+
   <img src="../img/test_caller_app_example.png" width="400" height="800">
 
 Для установки тестового приложения на устройство через adb, нужно перейти в соответствующую директорию и выполнить команду:
@@ -109,6 +110,7 @@ BroadcastReceiver: 100.00% (intercepted = 19, total = 19)
 
 <details>
 <summary>Запуск с -v флагом для более подробного вывода</summary>
+
 ```bash
 % bash check_ipc_interception_percentage.bash -v -t 15
 Длительность трассировки: 15 секунд
