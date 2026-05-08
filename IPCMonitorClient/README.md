@@ -60,13 +60,211 @@
 Для тестирования и демонистрации работы приложения `IPCMonitorClient`, были подготовлены еще два простых android приложения из папки [TestAndroidIPCApps](../TestAndroidIPCApps), которые обмениваются IPC взаимодействиями (`ContentProvider`, `Service`, `BroadcastReceiver`):
 - [IPCHubTestApp](../TestAndroidIPCApps/IPCHubTestApp/) - тестовое приложение, представляющее собой Hub server, в котором реализованы `Service` и `ContentProvider`, при обращении `IPCCallerTestApp` для запуска соответствующего `Service`, оправляется `BroadcastReceiver` отправителю, при обращении к `ContentProvider` отдает соответствующие подготовленные данные. 
   <img src="../img/test_server_hub_example.png" width="400" height="800">
-- [IPCCallerTestApp](../TestAndroidIPCApps/IPCCallerTestApp/) - тестовое приложение, имитирующее инициатора IPС взаимодействий с Hub Server. Раз в 15 секунд, отправляет к `IPCHubTestApp` запрос на запуск соответствующего `Service` и получение данных от `ContentProvider`. При получении `BroadcastReceiver` от `IPCHubTestApp` показывает Toast-уведомление на соответствующем экране. 
+- [IPCCallerTestApp](../TestAndroidIPCApps/IPCCallerTestApp/) - тестовое приложение, имитирующее инициатора IPС взаимодействий с Hub Server. При нажатии на соответствующие кнопки в интерфейсе, отправляются запросы к `IPCHubTestApp`: методы `query`, `insert`, `update`, `delete`, `call` в ContentProvider и методы `startService`, `bindService` и `unbindService` для взаимодействия с комопнентом Service. При получении `BroadcastReceiver` от `IPCHubTestApp`, после запуска Service через `startService`, показывает Toast-уведомление на соответствующем экране. 
   <img src="../img/test_caller_app_example.png" width="400" height="800">
 
 Для установки тестового приложения на устройство через adb, нужно перейти в соответствующую директорию и выполнить команду:
 ```bash
 ./gradlew assembleDebug && adb install -r app/build/outputs/apk/debug/app-debug.apk
 ```
+
+Также для проверки того, что в рамках выполняемых между приложениями IPC взаимодействий, они все перехватываются разработанной системой мониторинга, был написан bash скрипт [check_ipc_interception_percentage.bash](./check_ipc_interception_percentage.bash), который выводит процент перехваченных взаимодействий (на основе логов приложения монитора) по отношению ко всем произошедшим в Android IPC взаимодействиям (все произошедшие события в Android извлекаются через [atrace](https://perfetto.dev/docs/data-sources/atrace)) за указанный временной интервал в разбивке по каждому компоненту.  
+
+Справку для использования скрипта можно посмотреть следующим образом:
+```bash
+% bash check_ipc_interception_percentage.bash -h
+Использование: check_ipc_interception_percentage.bash [ОПЦИИ]
+
+Опции:
+  -h, --help              Показать эту справку
+  -t, --trace-duration-secs СЕКУНДЫ
+                          Длительность трассировки (по умолчанию: 90 секунд)
+  -v, --verbose           Подробный вывод (логгирование полученных событий из системы мониторинга с событиями из Android (atrace))
+
+Примеры:
+  check_ipc_interception_percentage.bash                                      # Запуск с параметрами по умолчанию (90 сек)
+  check_ipc_interception_percentage.bash --trace-duration-secs 120            # Трассировка на 120 секунд
+  check_ipc_interception_percentage.bash -v --trace-duration-secs 120         # Трассировка на 120 секунд с подробным выводом
+```
+
+В течении указанного интервала в секундах через atrace будет записываться trace со всеми IPC взаимодействиями которые будут происходить в данных момент, поэтому после запуска скрипта, необходимо чтобы были проведены необходимые IPC взаимодействия между приложениями, процент перехвата которых нужно проверить. В рамках инструментального тестирования, это можно сделать двумя способами:
+1. Поднять выше описанный тестовых стенд из двух приложений и за указанное время вызвать необходимые IPC взаимодействия через интерфейс `IPCCallerTestApp`.
+2. Запустить monkey testing со случайными событиями.
+
+Ниже показан пример запуска скрипта, предварительно запущенными тестовым стендом из двух приложений, который проверяет процент перехвата взаимодействий между ними реализованной системой.
+```bash
+% bash check_ipc_interception_percentage.bash --trace-duration-secs=15    
+Длительность трассировки: 15 секунд
+Запуск atrace
+capturing trace...Ожидание 15 секунд перед записью trace данных
+ done
+Данные из Android по IPC взаимодействиям (atrace) сохранены в файл atrace.output
+/data/local/tmp/atrace.output: 1 file pulled, 0 skipped. 36.6 MB/s (92545 bytes in 0.002s)
+Данные системы мониторинга сохранены в jq_ipc_monitor_data.jsonl
+Результаты проверки с подсчетом процента перехвата IPC в разбивке по типу:
+ContentProvider: 100.00% (intercepted = 5, total = 5)
+Service: 100.00% (intercepted = 3, total = 3)
+BroadcastReceiver: 100.00% (intercepted = 19, total = 19)
+```
+
+<details>
+<summary>Запуск с -v флагом для более подробного вывода</summary>
+```bash
+% bash check_ipc_interception_percentage.bash -v -t 15
+Длительность трассировки: 15 секунд
+Запуск atrace
+capturing trace...Ожидание 15 секунд перед записью trace данных
+ done
+Данные из Android по IPC взаимодействиям (atrace) сохранены в файл atrace.output
+/data/local/tmp/atrace.output: 1 file pulled, 0 skipped. 64.0 MB/s (121937 bytes in 0.002s)
+Данные системы мониторинга сохранены в jq_ipc_monitor_data.jsonl
+atrace_provider_record = query: com.example.ipchubtestapp.provider
+Через atrace в Android обнаружено событие об IPC с ContentProvider, provider_called_method = query, provider_authority = com.example.ipchubtestapp.provider
+Поиск перехваченных данных (intercepted_ipc_monitor_provider_data) системой мониторинга через jq_cmd = jq -Mrc --arg type "ContentProvider" --arg method "query" --arg authority "com.example.ipchubtestapp.provider" 'select(.type ==  and .payload.method ==  and .payload.authority == )' jq_ipc_monitor_data.jsonl
+intercepted_ipc_monitor_provider_data = {"type":"ContentProvider","sender":"com.example.ipccallertestapp","receiver":"com.example.ipchubtestapp","payload":{"authority":"com.example.ipchubtestapp.provider","uri":"content://com.example.ipchubtestapp.provider/state","method":"query"},"timestamp":1778277323463}
+{"type":"ContentProvider","sender":"com.example.ipccallertestapp","receiver":"com.example.ipchubtestapp","payload":{"authority":"com.example.ipchubtestapp.provider","uri":"content://com.example.ipchubtestapp.provider/state","method":"query"},"timestamp":1778278078107}
+{"type":"ContentProvider","sender":"com.example.ipccallertestapp","receiver":"com.example.ipchubtestapp","payload":{"authority":"com.example.ipchubtestapp.provider","uri":"content://com.example.ipchubtestapp.provider/state","method":"query"},"timestamp":1778278842112}
+{"type":"ContentProvider","sender":"com.example.ipccallertestapp","receiver":"com.example.ipchubtestapp","payload":{"authority":"com.example.ipchubtestapp.provider","uri":"content://com.example.ipchubtestapp.provider/state","method":"query"},"timestamp":1778279189600}
+atrace_provider_record = insert: com.example.ipchubtestapp.provider
+Через atrace в Android обнаружено событие об IPC с ContentProvider, provider_called_method = insert, provider_authority = com.example.ipchubtestapp.provider
+Поиск перехваченных данных (intercepted_ipc_monitor_provider_data) системой мониторинга через jq_cmd = jq -Mrc --arg type "ContentProvider" --arg method "insert" --arg authority "com.example.ipchubtestapp.provider" 'select(.type ==  and .payload.method ==  and .payload.authority == )' jq_ipc_monitor_data.jsonl
+intercepted_ipc_monitor_provider_data = {"type":"ContentProvider","sender":"com.example.ipccallertestapp","receiver":"com.example.ipchubtestapp","payload":{"authority":"com.example.ipchubtestapp.provider","uri":"content://com.example.ipchubtestapp.provider/state","method":"insert"},"timestamp":1778277325312}
+{"type":"ContentProvider","sender":"com.example.ipccallertestapp","receiver":"com.example.ipchubtestapp","payload":{"authority":"com.example.ipchubtestapp.provider","uri":"content://com.example.ipchubtestapp.provider/state","method":"insert"},"timestamp":1778278079265}
+{"type":"ContentProvider","sender":"com.example.ipccallertestapp","receiver":"com.example.ipchubtestapp","payload":{"authority":"com.example.ipchubtestapp.provider","uri":"content://com.example.ipchubtestapp.provider/state","method":"insert"},"timestamp":1778278843595}
+{"type":"ContentProvider","sender":"com.example.ipccallertestapp","receiver":"com.example.ipchubtestapp","payload":{"authority":"com.example.ipchubtestapp.provider","uri":"content://com.example.ipchubtestapp.provider/state","method":"insert"},"timestamp":1778279190288}
+atrace_provider_record = update: com.example.ipchubtestapp.provider
+Через atrace в Android обнаружено событие об IPC с ContentProvider, provider_called_method = update, provider_authority = com.example.ipchubtestapp.provider
+Поиск перехваченных данных (intercepted_ipc_monitor_provider_data) системой мониторинга через jq_cmd = jq -Mrc --arg type "ContentProvider" --arg method "update" --arg authority "com.example.ipchubtestapp.provider" 'select(.type ==  and .payload.method ==  and .payload.authority == )' jq_ipc_monitor_data.jsonl
+intercepted_ipc_monitor_provider_data = {"type":"ContentProvider","sender":"com.example.ipccallertestapp","receiver":"com.example.ipchubtestapp","payload":{"authority":"com.example.ipchubtestapp.provider","uri":"content://com.example.ipchubtestapp.provider/state","method":"update"},"timestamp":1778277326991}
+{"type":"ContentProvider","sender":"com.example.ipccallertestapp","receiver":"com.example.ipchubtestapp","payload":{"authority":"com.example.ipchubtestapp.provider","uri":"content://com.example.ipchubtestapp.provider/state","method":"update"},"timestamp":1778278080883}
+{"type":"ContentProvider","sender":"com.example.ipccallertestapp","receiver":"com.example.ipchubtestapp","payload":{"authority":"com.example.ipchubtestapp.provider","uri":"content://com.example.ipchubtestapp.provider/state","method":"update"},"timestamp":1778278844675}
+{"type":"ContentProvider","sender":"com.example.ipccallertestapp","receiver":"com.example.ipchubtestapp","payload":{"authority":"com.example.ipchubtestapp.provider","uri":"content://com.example.ipchubtestapp.provider/state","method":"update"},"timestamp":1778279190922}
+atrace_provider_record = delete: com.example.ipchubtestapp.provider
+Через atrace в Android обнаружено событие об IPC с ContentProvider, provider_called_method = delete, provider_authority = com.example.ipchubtestapp.provider
+Поиск перехваченных данных (intercepted_ipc_monitor_provider_data) системой мониторинга через jq_cmd = jq -Mrc --arg type "ContentProvider" --arg method "delete" --arg authority "com.example.ipchubtestapp.provider" 'select(.type ==  and .payload.method ==  and .payload.authority == )' jq_ipc_monitor_data.jsonl
+intercepted_ipc_monitor_provider_data = {"type":"ContentProvider","sender":"com.example.ipccallertestapp","receiver":"com.example.ipchubtestapp","payload":{"authority":"com.example.ipchubtestapp.provider","uri":"content://com.example.ipchubtestapp.provider/state","method":"delete"},"timestamp":1778277328828}
+{"type":"ContentProvider","sender":"com.example.ipccallertestapp","receiver":"com.example.ipchubtestapp","payload":{"authority":"com.example.ipchubtestapp.provider","uri":"content://com.example.ipchubtestapp.provider/state","method":"delete"},"timestamp":1778278081790}
+{"type":"ContentProvider","sender":"com.example.ipccallertestapp","receiver":"com.example.ipchubtestapp","payload":{"authority":"com.example.ipchubtestapp.provider","uri":"content://com.example.ipchubtestapp.provider/state","method":"delete"},"timestamp":1778278845555}
+{"type":"ContentProvider","sender":"com.example.ipccallertestapp","receiver":"com.example.ipchubtestapp","payload":{"authority":"com.example.ipchubtestapp.provider","uri":"content://com.example.ipchubtestapp.provider/state","method":"delete"},"timestamp":1778279191490}
+atrace_provider_record = call: com.example.ipchubtestapp.provider
+Через atrace в Android обнаружено событие об IPC с ContentProvider, provider_called_method = call, provider_authority = com.example.ipchubtestapp.provider
+Поиск перехваченных данных (intercepted_ipc_monitor_provider_data) системой мониторинга через jq_cmd = jq -Mrc --arg type "ContentProvider" --arg method "call" --arg authority "com.example.ipchubtestapp.provider" 'select(.type == $type and (["query", "insert", "delete", "update"] | index($method) == null) and .payload.authority == $authority)' jq_ipc_monitor_data.jsonl
+intercepted_ipc_monitor_provider_data = {"type":"ContentProvider","sender":"com.example.ipccallertestapp","receiver":"com.example.ipchubtestapp","payload":{"authority":"com.example.ipchubtestapp.provider","uri":"content://com.example.ipchubtestapp.provider/state","method":"query"},"timestamp":1778277323463}
+{"type":"ContentProvider","sender":"com.example.ipccallertestapp","receiver":"com.example.ipchubtestapp","payload":{"authority":"com.example.ipchubtestapp.provider","uri":"content://com.example.ipchubtestapp.provider/state","method":"insert"},"timestamp":1778277325312}
+{"type":"ContentProvider","sender":"com.example.ipccallertestapp","receiver":"com.example.ipchubtestapp","payload":{"authority":"com.example.ipchubtestapp.provider","uri":"content://com.example.ipchubtestapp.provider/state","method":"update"},"timestamp":1778277326991}
+{"type":"ContentProvider","sender":"com.example.ipccallertestapp","receiver":"com.example.ipchubtestapp","payload":{"authority":"com.example.ipchubtestapp.provider","uri":"content://com.example.ipchubtestapp.provider/state","method":"delete"},"timestamp":1778277328828}
+{"type":"ContentProvider","sender":"com.example.ipccallertestapp","receiver":"com.example.ipchubtestapp","payload":{"authority":"com.example.ipchubtestapp.provider","uri":"content://com.example.ipchubtestapp.provider","method":"getStatus"},"timestamp":1778277330640}
+{"type":"ContentProvider","sender":"com.example.ipccallertestapp","receiver":"com.example.ipchubtestapp","payload":{"authority":"com.example.ipchubtestapp.provider","uri":"content://com.example.ipchubtestapp.provider/state","method":"query"},"timestamp":1778278078107}
+{"type":"ContentProvider","sender":"com.example.ipccallertestapp","receiver":"com.example.ipchubtestapp","payload":{"authority":"com.example.ipchubtestapp.provider","uri":"content://com.example.ipchubtestapp.provider/state","method":"insert"},"timestamp":1778278079265}
+{"type":"ContentProvider","sender":"com.example.ipccallertestapp","receiver":"com.example.ipchubtestapp","payload":{"authority":"com.example.ipchubtestapp.provider","uri":"content://com.example.ipchubtestapp.provider/state","method":"update"},"timestamp":1778278080883}
+{"type":"ContentProvider","sender":"com.example.ipccallertestapp","receiver":"com.example.ipchubtestapp","payload":{"authority":"com.example.ipchubtestapp.provider","uri":"content://com.example.ipchubtestapp.provider/state","method":"delete"},"timestamp":1778278081790}
+{"type":"ContentProvider","sender":"com.example.ipccallertestapp","receiver":"com.example.ipchubtestapp","payload":{"authority":"com.example.ipchubtestapp.provider","uri":"content://com.example.ipchubtestapp.provider","method":"getStatus"},"timestamp":1778278082681}
+{"type":"ContentProvider","sender":"com.example.ipccallertestapp","receiver":"com.example.ipchubtestapp","payload":{"authority":"com.example.ipchubtestapp.provider","uri":"content://com.example.ipchubtestapp.provider/state","method":"query"},"timestamp":1778278842112}
+{"type":"ContentProvider","sender":"com.example.ipccallertestapp","receiver":"com.example.ipchubtestapp","payload":{"authority":"com.example.ipchubtestapp.provider","uri":"content://com.example.ipchubtestapp.provider/state","method":"insert"},"timestamp":1778278843595}
+{"type":"ContentProvider","sender":"com.example.ipccallertestapp","receiver":"com.example.ipchubtestapp","payload":{"authority":"com.example.ipchubtestapp.provider","uri":"content://com.example.ipchubtestapp.provider/state","method":"update"},"timestamp":1778278844675}
+{"type":"ContentProvider","sender":"com.example.ipccallertestapp","receiver":"com.example.ipchubtestapp","payload":{"authority":"com.example.ipchubtestapp.provider","uri":"content://com.example.ipchubtestapp.provider/state","method":"delete"},"timestamp":1778278845555}
+{"type":"ContentProvider","sender":"com.example.ipccallertestapp","receiver":"com.example.ipchubtestapp","payload":{"authority":"com.example.ipchubtestapp.provider","uri":"content://com.example.ipchubtestapp.provider","method":"getStatus"},"timestamp":1778278846559}
+{"type":"ContentProvider","sender":"com.example.ipccallertestapp","receiver":"com.example.ipchubtestapp","payload":{"authority":"com.example.ipchubtestapp.provider","uri":"content://com.example.ipchubtestapp.provider/state","method":"query"},"timestamp":1778279189600}
+{"type":"ContentProvider","sender":"com.example.ipccallertestapp","receiver":"com.example.ipchubtestapp","payload":{"authority":"com.example.ipchubtestapp.provider","uri":"content://com.example.ipchubtestapp.provider/state","method":"insert"},"timestamp":1778279190288}
+{"type":"ContentProvider","sender":"com.example.ipccallertestapp","receiver":"com.example.ipchubtestapp","payload":{"authority":"com.example.ipchubtestapp.provider","uri":"content://com.example.ipchubtestapp.provider/state","method":"update"},"timestamp":1778279190922}
+{"type":"ContentProvider","sender":"com.example.ipccallertestapp","receiver":"com.example.ipchubtestapp","payload":{"authority":"com.example.ipchubtestapp.provider","uri":"content://com.example.ipchubtestapp.provider/state","method":"delete"},"timestamp":1778279191490}
+{"type":"ContentProvider","sender":"com.example.ipccallertestapp","receiver":"com.example.ipchubtestapp","payload":{"authority":"com.example.ipchubtestapp.provider","uri":"content://com.example.ipchubtestapp.provider","method":"getStatus"},"timestamp":1778279192055}
+atrace_service_record = startService: intent=Intent { xflg=0x4 cmp=com.example.ipchubtestapp/.CommandCenterService (has extras) }, caller=com.example.ipccallertestapp, fgRequired=false
+Через atrace в Android обнаружено событие об IPC с Service, service_action = startService, service_name = com.example.ipchubtestapp.CommandCenterService
+Поиск перехваченных данных (intercepted_ipc_monitor_service_data) системой мониторинга через jq_cmd = jq -Mrc --arg type "Service" --arg service_name "com.example.ipchubtestapp.CommandCenterService" --arg service_action "startService" 'select(.type == $type and .payload.service_name == $service_name and .payload.action == $service_action)' jq_ipc_monitor_data.jsonl
+intercepted_ipc_monitor_service_data = {"type":"Service","sender":"com.example.ipccallertestapp","receiver":"com.example.ipchubtestapp","payload":{"action":"startService","service_type":"ForegroundService","service_name":"com.example.ipchubtestapp.CommandCenterService"},"timestamp":1778277332474}
+{"type":"Service","sender":"com.example.ipccallertestapp","receiver":"com.example.ipchubtestapp","payload":{"action":"startService","service_type":"ForegroundService","service_name":"com.example.ipchubtestapp.CommandCenterService"},"timestamp":1778278083689}
+{"type":"Service","sender":"com.example.ipccallertestapp","receiver":"com.example.ipchubtestapp","payload":{"action":"startService","service_type":"ForegroundService","service_name":"com.example.ipchubtestapp.CommandCenterService"},"timestamp":1778278847793}
+{"type":"Service","sender":"com.example.ipccallertestapp","receiver":"com.example.ipchubtestapp","payload":{"action":"startService","service_type":"ForegroundService","service_name":"com.example.ipchubtestapp.CommandCenterService"},"timestamp":1778279192672}
+atrace_service_record = bindService:{com.example.ipchubtestapp/com.example.ipchubtestapp.CommandCenterService}
+Через atrace в Android обнаружено событие об IPC с Service, service_action = bindService, service_name = com.example.ipchubtestapp.CommandCenterService
+Поиск перехваченных данных (intercepted_ipc_monitor_service_data) системой мониторинга через jq_cmd = jq -Mrc --arg type "Service" --arg service_name "com.example.ipchubtestapp.CommandCenterService" --arg service_action "bindService" 'select(.type == $type and .payload.service_name == $service_name and .payload.action == $service_action)' jq_ipc_monitor_data.jsonl
+intercepted_ipc_monitor_service_data = {"type":"Service","sender":"com.example.ipccallertestapp","receiver":"com.example.ipchubtestapp","payload":{"action":"bindService","service_type":"BoundService","service_name":"com.example.ipchubtestapp.CommandCenterService"},"timestamp":1778277334973}
+{"type":"Service","sender":"com.example.ipccallertestapp","receiver":"com.example.ipchubtestapp","payload":{"action":"bindService","service_type":"BoundService","service_name":"com.example.ipchubtestapp.CommandCenterService"},"timestamp":1778278085317}
+{"type":"Service","sender":"com.example.ipccallertestapp","receiver":"com.example.ipchubtestapp","payload":{"action":"bindService","service_type":"BoundService","service_name":"com.example.ipchubtestapp.CommandCenterService"},"timestamp":1778278849009}
+{"type":"Service","sender":"com.example.ipccallertestapp","receiver":"com.example.ipchubtestapp","payload":{"action":"bindService","service_type":"BoundService","service_name":"com.example.ipchubtestapp.CommandCenterService"},"timestamp":1778279193304}
+atrace_service_record = unbindServiceLocked: com.example.ipchubtestapp/.CommandCenterService from com.example.ipccallertestapp
+Через atrace в Android обнаружено событие об IPC с Service, service_action = unbindService, service_name = com.example.ipchubtestapp/.CommandCenterService
+Поиск перехваченных данных (intercepted_ipc_monitor_service_data) системой мониторинга через jq_cmd = jq -Mrc --arg type "Service" --arg service_name "com.example.ipchubtestapp/.CommandCenterService" --arg service_action "unbindService" 'select(.type == $type and .payload.service_name == $service_name and .payload.action == $service_action)' jq_ipc_monitor_data.jsonl
+intercepted_ipc_monitor_service_data = {"type":"Service","sender":"com.example.ipccallertestapp","receiver":"com.example.ipchubtestapp","payload":{"action":"unbindService","service_type":"BoundService","service_name":"com.example.ipchubtestapp/.CommandCenterService"},"timestamp":1778277337008}
+{"type":"Service","sender":"com.example.ipccallertestapp","receiver":"com.example.ipchubtestapp","payload":{"action":"unbindService","service_type":"BoundService","service_name":"com.example.ipchubtestapp/.CommandCenterService"},"timestamp":1778278087648}
+{"type":"Service","sender":"com.example.ipccallertestapp","receiver":"com.example.ipchubtestapp","payload":{"action":"unbindService","service_type":"BoundService","service_name":"com.example.ipchubtestapp/.CommandCenterService"},"timestamp":1778278850191}
+{"type":"Service","sender":"com.example.ipccallertestapp","receiver":"com.example.ipchubtestapp","payload":{"action":"unbindService","service_type":"BoundService","service_name":"com.example.ipchubtestapp/.CommandCenterService"},"timestamp":1778279193989}
+Через atrace в Android обнаружено событие об IPC с BroadcastReceiver, broadcast_action = android.intent.action.CLOSE_SYSTEM_DIALOGS, broadcast_target = *
+Поиск перехваченных данных (intercepted_ipc_monitor_broadcast_data) системой мониторинга через jq_cmd = jq -Mrc --arg type "BroadcastReceiver" --arg broadcast_target "*" --arg broadcast_action "android.intent.action.CLOSE_SYSTEM_DIALOGS" 'select(.type == $type and .receiver == $broadcast_target and .payload.action == $broadcast_action)' jq_ipc_monitor_data.jsonl
+intercepted_ipc_monitor_broadcast_data = {"type":"BroadcastReceiver","sender":"system","receiver":"*","payload":{"action":"android.intent.action.CLOSE_SYSTEM_DIALOGS"},"timestamp":1778278839859}
+Через atrace в Android обнаружено событие об IPC с BroadcastReceiver, broadcast_action = com.custom.aosp.IPC_MONITOR_EVENT, broadcast_target = com.example.ipcmonitorclient
+Поиск перехваченных данных (intercepted_ipc_monitor_broadcast_data) системой мониторинга через jq_cmd = jq -Mrc --arg type "BroadcastReceiver" --arg broadcast_target "com.example.ipcmonitorclient" --arg broadcast_action "com.custom.aosp.IPC_MONITOR_EVENT" 'select(.type == $type and .receiver == $broadcast_target and .payload.action == $broadcast_action)' jq_ipc_monitor_data.jsonl
+intercepted_ipc_monitor_broadcast_data = {"type":"BroadcastReceiver","sender":"com.example.ipchubtestapp","receiver":"com.example.ipcmonitorclient","payload":{"action":"com.custom.aosp.IPC_MONITOR_EVENT"},"timestamp":1778277323465}
+Через atrace в Android обнаружено событие об IPC с BroadcastReceiver, broadcast_action = android.intent.action.SIG_STR, broadcast_target = *
+Поиск перехваченных данных (intercepted_ipc_monitor_broadcast_data) системой мониторинга через jq_cmd = jq -Mrc --arg type "BroadcastReceiver" --arg broadcast_target "*" --arg broadcast_action "android.intent.action.SIG_STR" 'select(.type == $type and .receiver == $broadcast_target and .payload.action == $broadcast_action)' jq_ipc_monitor_data.jsonl
+intercepted_ipc_monitor_broadcast_data = {"type":"BroadcastReceiver","sender":"android","receiver":"*","payload":{"action":"android.intent.action.SIG_STR"},"timestamp":1778278828465}
+Через atrace в Android обнаружено событие об IPC с BroadcastReceiver, broadcast_action = com.custom.aosp.IPC_MONITOR_EVENT, broadcast_target = com.example.ipcmonitorclient
+Поиск перехваченных данных (intercepted_ipc_monitor_broadcast_data) системой мониторинга через jq_cmd = jq -Mrc --arg type "BroadcastReceiver" --arg broadcast_target "com.example.ipcmonitorclient" --arg broadcast_action "com.custom.aosp.IPC_MONITOR_EVENT" 'select(.type == $type and .receiver == $broadcast_target and .payload.action == $broadcast_action)' jq_ipc_monitor_data.jsonl
+intercepted_ipc_monitor_broadcast_data = {"type":"BroadcastReceiver","sender":"com.example.ipchubtestapp","receiver":"com.example.ipcmonitorclient","payload":{"action":"com.custom.aosp.IPC_MONITOR_EVENT"},"timestamp":1778277323465}
+Через atrace в Android обнаружено событие об IPC с BroadcastReceiver, broadcast_action = com.custom.aosp.IPC_MONITOR_EVENT, broadcast_target = com.example.ipcmonitorclient
+Поиск перехваченных данных (intercepted_ipc_monitor_broadcast_data) системой мониторинга через jq_cmd = jq -Mrc --arg type "BroadcastReceiver" --arg broadcast_target "com.example.ipcmonitorclient" --arg broadcast_action "com.custom.aosp.IPC_MONITOR_EVENT" 'select(.type == $type and .receiver == $broadcast_target and .payload.action == $broadcast_action)' jq_ipc_monitor_data.jsonl
+intercepted_ipc_monitor_broadcast_data = {"type":"BroadcastReceiver","sender":"com.example.ipchubtestapp","receiver":"com.example.ipcmonitorclient","payload":{"action":"com.custom.aosp.IPC_MONITOR_EVENT"},"timestamp":1778277323465}
+Через atrace в Android обнаружено событие об IPC с BroadcastReceiver, broadcast_action = com.custom.aosp.IPC_MONITOR_EVENT, broadcast_target = com.example.ipcmonitorclient
+Поиск перехваченных данных (intercepted_ipc_monitor_broadcast_data) системой мониторинга через jq_cmd = jq -Mrc --arg type "BroadcastReceiver" --arg broadcast_target "com.example.ipcmonitorclient" --arg broadcast_action "com.custom.aosp.IPC_MONITOR_EVENT" 'select(.type == $type and .receiver == $broadcast_target and .payload.action == $broadcast_action)' jq_ipc_monitor_data.jsonl
+intercepted_ipc_monitor_broadcast_data = {"type":"BroadcastReceiver","sender":"com.example.ipchubtestapp","receiver":"com.example.ipcmonitorclient","payload":{"action":"com.custom.aosp.IPC_MONITOR_EVENT"},"timestamp":1778277323465}
+Через atrace в Android обнаружено событие об IPC с BroadcastReceiver, broadcast_action = com.custom.aosp.IPC_MONITOR_EVENT, broadcast_target = com.example.ipcmonitorclient
+Поиск перехваченных данных (intercepted_ipc_monitor_broadcast_data) системой мониторинга через jq_cmd = jq -Mrc --arg type "BroadcastReceiver" --arg broadcast_target "com.example.ipcmonitorclient" --arg broadcast_action "com.custom.aosp.IPC_MONITOR_EVENT" 'select(.type == $type and .receiver == $broadcast_target and .payload.action == $broadcast_action)' jq_ipc_monitor_data.jsonl
+intercepted_ipc_monitor_broadcast_data = {"type":"BroadcastReceiver","sender":"com.example.ipchubtestapp","receiver":"com.example.ipcmonitorclient","payload":{"action":"com.custom.aosp.IPC_MONITOR_EVENT"},"timestamp":1778277323465}
+Через atrace в Android обнаружено событие об IPC с BroadcastReceiver, broadcast_action = com.custom.aosp.IPC_MONITOR_EVENT, broadcast_target = com.example.ipcmonitorclient
+Поиск перехваченных данных (intercepted_ipc_monitor_broadcast_data) системой мониторинга через jq_cmd = jq -Mrc --arg type "BroadcastReceiver" --arg broadcast_target "com.example.ipcmonitorclient" --arg broadcast_action "com.custom.aosp.IPC_MONITOR_EVENT" 'select(.type == $type and .receiver == $broadcast_target and .payload.action == $broadcast_action)' jq_ipc_monitor_data.jsonl
+intercepted_ipc_monitor_broadcast_data = {"type":"BroadcastReceiver","sender":"com.example.ipchubtestapp","receiver":"com.example.ipcmonitorclient","payload":{"action":"com.custom.aosp.IPC_MONITOR_EVENT"},"timestamp":1778277323465}
+Через atrace в Android обнаружено событие об IPC с BroadcastReceiver, broadcast_action = com.custom.aosp.IPC_MONITOR_EVENT, broadcast_target = com.example.ipcmonitorclient
+Поиск перехваченных данных (intercepted_ipc_monitor_broadcast_data) системой мониторинга через jq_cmd = jq -Mrc --arg type "BroadcastReceiver" --arg broadcast_target "com.example.ipcmonitorclient" --arg broadcast_action "com.custom.aosp.IPC_MONITOR_EVENT" 'select(.type == $type and .receiver == $broadcast_target and .payload.action == $broadcast_action)' jq_ipc_monitor_data.jsonl
+intercepted_ipc_monitor_broadcast_data = {"type":"BroadcastReceiver","sender":"com.example.ipchubtestapp","receiver":"com.example.ipcmonitorclient","payload":{"action":"com.custom.aosp.IPC_MONITOR_EVENT"},"timestamp":1778277323465}
+Через atrace в Android обнаружено событие об IPC с BroadcastReceiver, broadcast_action = com.custom.aosp.IPC_MONITOR_EVENT, broadcast_target = com.example.ipcmonitorclient
+Поиск перехваченных данных (intercepted_ipc_monitor_broadcast_data) системой мониторинга через jq_cmd = jq -Mrc --arg type "BroadcastReceiver" --arg broadcast_target "com.example.ipcmonitorclient" --arg broadcast_action "com.custom.aosp.IPC_MONITOR_EVENT" 'select(.type == $type and .receiver == $broadcast_target and .payload.action == $broadcast_action)' jq_ipc_monitor_data.jsonl
+intercepted_ipc_monitor_broadcast_data = {"type":"BroadcastReceiver","sender":"com.example.ipchubtestapp","receiver":"com.example.ipcmonitorclient","payload":{"action":"com.custom.aosp.IPC_MONITOR_EVENT"},"timestamp":1778277323465}
+Через atrace в Android обнаружено событие об IPC с BroadcastReceiver, broadcast_action = com.custom.aosp.IPC_MONITOR_EVENT, broadcast_target = com.example.ipcmonitorclient
+Поиск перехваченных данных (intercepted_ipc_monitor_broadcast_data) системой мониторинга через jq_cmd = jq -Mrc --arg type "BroadcastReceiver" --arg broadcast_target "com.example.ipcmonitorclient" --arg broadcast_action "com.custom.aosp.IPC_MONITOR_EVENT" 'select(.type == $type and .receiver == $broadcast_target and .payload.action == $broadcast_action)' jq_ipc_monitor_data.jsonl
+intercepted_ipc_monitor_broadcast_data = {"type":"BroadcastReceiver","sender":"com.example.ipchubtestapp","receiver":"com.example.ipcmonitorclient","payload":{"action":"com.custom.aosp.IPC_MONITOR_EVENT"},"timestamp":1778277323465}
+Через atrace в Android обнаружено событие об IPC с BroadcastReceiver, broadcast_action = com.custom.aosp.IPC_MONITOR_EVENT, broadcast_target = com.example.ipcmonitorclient
+Поиск перехваченных данных (intercepted_ipc_monitor_broadcast_data) системой мониторинга через jq_cmd = jq -Mrc --arg type "BroadcastReceiver" --arg broadcast_target "com.example.ipcmonitorclient" --arg broadcast_action "com.custom.aosp.IPC_MONITOR_EVENT" 'select(.type == $type and .receiver == $broadcast_target and .payload.action == $broadcast_action)' jq_ipc_monitor_data.jsonl
+intercepted_ipc_monitor_broadcast_data = {"type":"BroadcastReceiver","sender":"com.example.ipchubtestapp","receiver":"com.example.ipcmonitorclient","payload":{"action":"com.custom.aosp.IPC_MONITOR_EVENT"},"timestamp":1778277323465}
+Через atrace в Android обнаружено событие об IPC с BroadcastReceiver, broadcast_action = com.custom.aosp.IPC_MONITOR_EVENT, broadcast_target = com.example.ipcmonitorclient
+Поиск перехваченных данных (intercepted_ipc_monitor_broadcast_data) системой мониторинга через jq_cmd = jq -Mrc --arg type "BroadcastReceiver" --arg broadcast_target "com.example.ipcmonitorclient" --arg broadcast_action "com.custom.aosp.IPC_MONITOR_EVENT" 'select(.type == $type and .receiver == $broadcast_target and .payload.action == $broadcast_action)' jq_ipc_monitor_data.jsonl
+intercepted_ipc_monitor_broadcast_data = {"type":"BroadcastReceiver","sender":"com.example.ipchubtestapp","receiver":"com.example.ipcmonitorclient","payload":{"action":"com.custom.aosp.IPC_MONITOR_EVENT"},"timestamp":1778277323465}
+Через atrace в Android обнаружено событие об IPC с BroadcastReceiver, broadcast_action = com.custom.aosp.IPC_MONITOR_EVENT, broadcast_target = com.example.ipcmonitorclient
+Поиск перехваченных данных (intercepted_ipc_monitor_broadcast_data) системой мониторинга через jq_cmd = jq -Mrc --arg type "BroadcastReceiver" --arg broadcast_target "com.example.ipcmonitorclient" --arg broadcast_action "com.custom.aosp.IPC_MONITOR_EVENT" 'select(.type == $type and .receiver == $broadcast_target and .payload.action == $broadcast_action)' jq_ipc_monitor_data.jsonl
+intercepted_ipc_monitor_broadcast_data = {"type":"BroadcastReceiver","sender":"com.example.ipchubtestapp","receiver":"com.example.ipcmonitorclient","payload":{"action":"com.custom.aosp.IPC_MONITOR_EVENT"},"timestamp":1778277323465}
+Через atrace в Android обнаружено событие об IPC с BroadcastReceiver, broadcast_action = com.custom.aosp.IPC_MONITOR_EVENT, broadcast_target = com.example.ipcmonitorclient
+Поиск перехваченных данных (intercepted_ipc_monitor_broadcast_data) системой мониторинга через jq_cmd = jq -Mrc --arg type "BroadcastReceiver" --arg broadcast_target "com.example.ipcmonitorclient" --arg broadcast_action "com.custom.aosp.IPC_MONITOR_EVENT" 'select(.type == $type and .receiver == $broadcast_target and .payload.action == $broadcast_action)' jq_ipc_monitor_data.jsonl
+intercepted_ipc_monitor_broadcast_data = {"type":"BroadcastReceiver","sender":"com.example.ipchubtestapp","receiver":"com.example.ipcmonitorclient","payload":{"action":"com.custom.aosp.IPC_MONITOR_EVENT"},"timestamp":1778277323465}
+Через atrace в Android обнаружено событие об IPC с BroadcastReceiver, broadcast_action = com.example.ipchubtestapp.action.NIGHT_MODE, broadcast_target = com.example.ipccallertestapp
+Поиск перехваченных данных (intercepted_ipc_monitor_broadcast_data) системой мониторинга через jq_cmd = jq -Mrc --arg type "BroadcastReceiver" --arg broadcast_target "com.example.ipccallertestapp" --arg broadcast_action "com.example.ipchubtestapp.action.NIGHT_MODE" 'select(.type == $type and .receiver == $broadcast_target and .payload.action == $broadcast_action)' jq_ipc_monitor_data.jsonl
+intercepted_ipc_monitor_broadcast_data = {"type":"BroadcastReceiver","sender":"com.example.ipchubtestapp","receiver":"com.example.ipccallertestapp","payload":{"action":"com.example.ipchubtestapp.action.NIGHT_MODE"},"timestamp":1778277332487}
+Через atrace в Android обнаружено событие об IPC с BroadcastReceiver, broadcast_action = com.custom.aosp.IPC_MONITOR_EVENT, broadcast_target = com.example.ipcmonitorclient
+Поиск перехваченных данных (intercepted_ipc_monitor_broadcast_data) системой мониторинга через jq_cmd = jq -Mrc --arg type "BroadcastReceiver" --arg broadcast_target "com.example.ipcmonitorclient" --arg broadcast_action "com.custom.aosp.IPC_MONITOR_EVENT" 'select(.type == $type and .receiver == $broadcast_target and .payload.action == $broadcast_action)' jq_ipc_monitor_data.jsonl
+intercepted_ipc_monitor_broadcast_data = {"type":"BroadcastReceiver","sender":"com.example.ipchubtestapp","receiver":"com.example.ipcmonitorclient","payload":{"action":"com.custom.aosp.IPC_MONITOR_EVENT"},"timestamp":1778277323465}
+Через atrace в Android обнаружено событие об IPC с BroadcastReceiver, broadcast_action = com.custom.aosp.IPC_MONITOR_EVENT, broadcast_target = com.example.ipcmonitorclient
+Поиск перехваченных данных (intercepted_ipc_monitor_broadcast_data) системой мониторинга через jq_cmd = jq -Mrc --arg type "BroadcastReceiver" --arg broadcast_target "com.example.ipcmonitorclient" --arg broadcast_action "com.custom.aosp.IPC_MONITOR_EVENT" 'select(.type == $type and .receiver == $broadcast_target and .payload.action == $broadcast_action)' jq_ipc_monitor_data.jsonl
+intercepted_ipc_monitor_broadcast_data = {"type":"BroadcastReceiver","sender":"com.example.ipchubtestapp","receiver":"com.example.ipcmonitorclient","payload":{"action":"com.custom.aosp.IPC_MONITOR_EVENT"},"timestamp":1778277323465}
+Через atrace в Android обнаружено событие об IPC с BroadcastReceiver, broadcast_action = com.custom.aosp.IPC_MONITOR_EVENT, broadcast_target = com.example.ipcmonitorclient
+Поиск перехваченных данных (intercepted_ipc_monitor_broadcast_data) системой мониторинга через jq_cmd = jq -Mrc --arg type "BroadcastReceiver" --arg broadcast_target "com.example.ipcmonitorclient" --arg broadcast_action "com.custom.aosp.IPC_MONITOR_EVENT" 'select(.type == $type and .receiver == $broadcast_target and .payload.action == $broadcast_action)' jq_ipc_monitor_data.jsonl
+intercepted_ipc_monitor_broadcast_data = {"type":"BroadcastReceiver","sender":"com.example.ipchubtestapp","receiver":"com.example.ipcmonitorclient","payload":{"action":"com.custom.aosp.IPC_MONITOR_EVENT"},"timestamp":1778277323465}
+Через atrace в Android обнаружено событие об IPC с BroadcastReceiver, broadcast_action = android.intent.action.SIG_STR, broadcast_target = *
+Поиск перехваченных данных (intercepted_ipc_monitor_broadcast_data) системой мониторинга через jq_cmd = jq -Mrc --arg type "BroadcastReceiver" --arg broadcast_target "*" --arg broadcast_action "android.intent.action.SIG_STR" 'select(.type == $type and .receiver == $broadcast_target and .payload.action == $broadcast_action)' jq_ipc_monitor_data.jsonl
+intercepted_ipc_monitor_broadcast_data = {"type":"BroadcastReceiver","sender":"android","receiver":"*","payload":{"action":"android.intent.action.SIG_STR"},"timestamp":1778278828465}
+Через atrace в Android обнаружено событие об IPC с BroadcastReceiver, broadcast_action = com.custom.aosp.IPC_MONITOR_EVENT, broadcast_target = com.example.ipcmonitorclient
+Поиск перехваченных данных (intercepted_ipc_monitor_broadcast_data) системой мониторинга через jq_cmd = jq -Mrc --arg type "BroadcastReceiver" --arg broadcast_target "com.example.ipcmonitorclient" --arg broadcast_action "com.custom.aosp.IPC_MONITOR_EVENT" 'select(.type == $type and .receiver == $broadcast_target and .payload.action == $broadcast_action)' jq_ipc_monitor_data.jsonl
+intercepted_ipc_monitor_broadcast_data = {"type":"BroadcastReceiver","sender":"com.example.ipchubtestapp","receiver":"com.example.ipcmonitorclient","payload":{"action":"com.custom.aosp.IPC_MONITOR_EVENT"},"timestamp":1778277323465}
+Результаты проверки с подсчетом процента перехвата IPC в разбивке по типу:
+ContentProvider: 100.00% (intercepted = 5, total = 5)
+Service: 100.00% (intercepted = 3, total = 3)
+BroadcastReceiver: 100.00% (intercepted = 21, total = 21)
+```
+</details>
+
+В ходе работы скрипт, для подсчета процента перехвата, генерирует два файла:
+- [atrace.output](./atrace.output) - сохраненый файл вывод atrace, в котором записаны факты IPC вазимодействий в Android по соответствующим компонентам, и который используется для сравнения с данными перехвата реализованной системы.
+- [jq_ipc_monitor_data.jsonl](./jq_ipc_monitor_data.jsonl) - файл с перехваченными данным реализованной системой мониторинга, процент перехвата событий который оценивается скриптом.
+
+
 
 ## Формат получаемых данных от Android
 

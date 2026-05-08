@@ -1,0 +1,753 @@
+TRACE:
+# tracer: nop
+#
+# entries-in-buffer/entries-written: 740/740   #P:4
+#
+#                                          _-----=> irqs-off/BH-disabled
+#                                         / _----=> need-resched
+#                                        | / _---=> hardirq/softirq
+#                                        || / _--=> preempt-depth
+#                                        ||| / _-=> migrate-disable
+#                                        |||| /     delay
+#           TASK-PID       TGID    CPU#  |||||  TIMESTAMP  FUNCTION
+#              | |           |       |   |||||     |         |
+          atrace-3270    (   3270) [003] .....  4047.633804: tracing_mark_write: trace_event_clock_sync: parent_ts=4047.633789
+          atrace-3270    (   3270) [003] .....  4047.633807: tracing_mark_write: trace_event_clock_sync: realtime_ts=1778279258202
+    binder:722_4-788     (    722) [002] .....  4047.972383: tracing_mark_write: I|722|broadcastIntentTarget:null
+    binder:722_4-788     (    722) [002] .....  4047.972438: tracing_mark_write: G|722|BroadcastQueue|broadcastIntent: 1001/android.intent.action.SIG_STR/0x0/_S_/u-1|1327192753
+    binder:722_4-788     (    722) [002] .....  4047.972995: tracing_mark_write: G|722|BroadcastQueue|queryReceivers|596622460
+    binder:722_4-788     (    722) [002] .....  4047.973070: tracing_mark_write: H|722|BroadcastQueue|596622460
+    binder:722_4-788     (    722) [002] .....  4047.974919: tracing_mark_write: H|722|BroadcastQueue|1327192753
+ IpcMonitorShare-800     (    722) [000] .....  4047.977088: tracing_mark_write: I|722|broadcastIntentTarget:com.example.ipcmonitorclient
+ IpcMonitorShare-800     (    722) [000] .....  4047.977136: tracing_mark_write: G|722|BroadcastQueue|broadcastIntent: 1000/com.custom.aosp.IPC_MONITOR_EVENT/0x50000000/___/u0|1906892858
+ IpcMonitorShare-800     (    722) [000] .....  4047.977441: tracing_mark_write: G|722|BroadcastQueue|queryReceivers|596622460
+ IpcMonitorShare-800     (    722) [000] .....  4047.980618: tracing_mark_write: H|722|BroadcastQueue|596622460
+ IpcMonitorShare-800     (    722) [000] .....  4047.989602: tracing_mark_write: G|722|BroadcastQueue|enqueueBroadcast|-584727655
+ IpcMonitorShare-800     (    722) [000] .....  4047.989632: tracing_mark_write: N|722|Broadcasts pending per uid|android/1000:1
+ IpcMonitorShare-800     (    722) [000] .....  4047.989636: tracing_mark_write: C|722|Broadcasts pending|10
+ IpcMonitorShare-800     (    722) [000] .....  4047.989757: tracing_mark_write: H|722|BroadcastQueue|-584727655
+ IpcMonitorShare-800     (    722) [000] .....  4047.989992: tracing_mark_write: H|722|BroadcastQueue|1906892858
+ ActivityManager-752     (    722) [001] .....  4047.990348: tracing_mark_write: B|722|call: settings
+ ActivityManager-752     (    722) [001] .....  4047.990376: tracing_mark_write: E|722
+ ActivityManager-752     (    722) [001] .....  4047.990406: tracing_mark_write: G|722|BroadcastQueue|updateRunningList|2073397876
+ ActivityManager-752     (    722) [001] .....  4047.990935: tracing_mark_write: G|722|BroadcastQueue.mRunning[0]|aba5d48 2548:com.example.ipcmonitorclient/u0a151 running|179985736
+ ActivityManager-752     (    722) [001] .....  4047.990939: tracing_mark_write: G|722|BroadcastQueue|scheduleReceiverWarmLocked|-1420502987
+ ActivityManager-752     (    722) [001] .....  4047.990964: tracing_mark_write: G|722|BroadcastQueue|setDeliveryState|1010840507
+ ActivityManager-752     (    722) [001] .....  4047.990970: tracing_mark_write: G|722|BroadcastQueue.mRunning[0]|a719373 com.custom.aosp.IPC_MONITOR_EVENT/u0 scheduled|179985736
+ ActivityManager-752     (    722) [001] .....  4047.990972: tracing_mark_write: H|722|BroadcastQueue|1010840507
+ ActivityManager-752     (    722) [001] .....  4047.991015: tracing_mark_write: G|722|BroadcastQueue|finishReceiver|-22046814
+ ActivityManager-752     (    722) [001] .....  4047.991016: tracing_mark_write: G|722|BroadcastQueue|setDeliveryState|1010840507
+ ActivityManager-752     (    722) [001] .....  4047.991018: tracing_mark_write: H|722|BroadcastQueue.mRunning[0]|179985736
+ ActivityManager-752     (    722) [001] .....  4047.991139: tracing_mark_write: N|722|Broadcasts pending per uid|android/1000:0
+ ActivityManager-752     (    722) [001] .....  4047.991142: tracing_mark_write: C|722|Broadcasts pending|9
+ ActivityManager-752     (    722) [001] .....  4047.991146: tracing_mark_write: H|722|BroadcastQueue|1010840507
+ ActivityManager-752     (    722) [001] .....  4047.991148: tracing_mark_write: H|722|BroadcastQueue|-22046814
+ ActivityManager-752     (    722) [001] .....  4047.991150: tracing_mark_write: H|722|BroadcastQueue|-1420502987
+ ActivityManager-752     (    722) [001] .....  4047.991152: tracing_mark_write: G|722|BroadcastQueue|demoteFromRunning|-1838922111
+ ActivityManager-752     (    722) [001] .....  4047.991153: tracing_mark_write: H|722|BroadcastQueue.mRunning[0]|179985736
+ ActivityManager-752     (    722) [001] .....  4047.991161: tracing_mark_write: H|722|BroadcastQueue|-1838922111
+ ActivityManager-752     (    722) [001] .....  4047.991163: tracing_mark_write: H|722|BroadcastQueue|2073397876
+ ActivityManager-752     (    722) [001] .....  4047.991215: tracing_mark_write: G|722|BroadcastQueue|updateRunningList|2073397876
+ ActivityManager-752     (    722) [001] .....  4047.991218: tracing_mark_write: H|722|BroadcastQueue|2073397876
+ pcmonitorclient-2548    (   2548) [000] .....  4047.994041: tracing_mark_write: B|2548|broadcastReceiveReg: com.custom.aosp.IPC_MONITOR_EVENT;clz=com.example.ipcmonitorclient.IpcMonitorReceiver
+ pcmonitorclient-2548    (   2548) [000] .....  4047.997146: tracing_mark_write: C|2548|PendingResult#finish#ClassName:null|1
+ pcmonitorclient-2548    (   2548) [000] .....  4047.997219: tracing_mark_write: E|2548
+ pcmonitorclient-2548    (   2548) [003] .....  4048.001401: tracing_mark_write: B|2548|trimMemory: 40
+ pcmonitorclient-2548    (   2548) [003] .....  4048.001465: tracing_mark_write: E|2548
+ pcmonitorclient-2548    (   2548) [003] .....  4048.001561: tracing_mark_write: B|2548|trimMemory: 40
+ pcmonitorclient-2548    (   2548) [003] .....  4048.001572: tracing_mark_write: E|2548
+    binder:722_4-788     (    722) [002] .....  4048.557089: tracing_mark_write: B|722|call: settings
+    binder:722_4-788     (    722) [002] .....  4048.557113: tracing_mark_write: E|722
+    binder:722_4-788     (    722) [002] .....  4048.557126: tracing_mark_write: B|722|call: settings
+    binder:722_4-788     (    722) [002] .....  4048.557144: tracing_mark_write: E|722
+    binder:722_4-788     (    722) [000] .....  4048.573441: tracing_mark_write: B|722|call: settings
+    binder:722_4-788     (    722) [000] .....  4048.573453: tracing_mark_write: E|722
+    binder:722_4-788     (    722) [000] .....  4048.573456: tracing_mark_write: B|722|call: settings
+    binder:722_4-788     (    722) [000] .....  4048.573459: tracing_mark_write: E|722
+    binder:722_4-788     (    722) [000] .....  4050.019850: tracing_mark_write: B|722|call: settings
+    binder:722_4-788     (    722) [000] .....  4050.019873: tracing_mark_write: E|722
+    binder:722_4-788     (    722) [001] .....  4050.024495: tracing_mark_write: B|722|getContentProvider: com.example.ipchubtestapp.provider
+    binder:722_4-788     (    722) [001] .....  4050.024825: tracing_mark_write: B|722|updateOomAdj_getProvider
+    binder:722_4-788     (    722) [003] .....  4050.025055: tracing_mark_write: N|722|FreezeLite|F---TX--t-/2987/0/905/1/3/3
+    binder:722_4-788     (    722) [003] .....  4050.025068: tracing_mark_write: N|722|Freezer|updateAppFreezeStateLSP com.example.ipchubtestapp pid: 2987 isFreezeExempt: false isFrozen: true shouldNotFreeze: false shouldNotFreezeReason: 1 curAdj: 0 oldOomAdj: 905 immediate: false cpuCapability: true implicitCpuCapability: true cpuTimeReasons: 0x3 implicitCpuTimeReasons: 0x3
+     OomAdjuster-759     (    722) [002] .....  4050.025116: tracing_mark_write: B|722|setProcessGroup com.example.ipchubtestapp to -1
+    binder:722_4-788     (    722) [003] .....  4050.025431: tracing_mark_write: N|722|Freezer|Unfreeze com.example.ipchubtestapp:2987 7
+     OomAdjuster-759     (    722) [000] .....  4050.067224: tracing_mark_write: E|722
+    binder:722_4-788     (    722) [002] .....  4050.068155: tracing_mark_write: E|722
+    binder:722_4-788     (    722) [002] .....  4050.068681: tracing_mark_write: E|722
+   binder:2987_1-2996    (   2987) [003] .....  4050.069127: tracing_mark_write: I|2987|scheduleStopService. token=android.os.BinderProxy@aea0672
+   binder:2987_1-2996    (   2987) [003] .....  4050.069306: tracing_mark_write: I|2987|updateProcessState: processState=3
+ e.ipchubtestapp-2987    (   2987) [003] .....  4050.069404: tracing_mark_write: B|2987|serviceStop: android.os.BinderProxy@aea0672
+   binder:2987_1-2996    (   2987) [003] .....  4050.070531: tracing_mark_write: B|2987|query: com.example.ipchubtestapp.provider
+   binder:2987_1-2996    (   2987) [003] .....  4050.075052: tracing_mark_write: E|2987
+    binder:722_1-736     (    722) [000] .....  4050.075723: tracing_mark_write: I|722|broadcastIntentTarget:com.example.ipcmonitorclient
+    binder:722_1-736     (    722) [000] .....  4050.075727: tracing_mark_write: G|722|BroadcastQueue|broadcastIntent: 10153/com.custom.aosp.IPC_MONITOR_EVENT/0x50000000/___/u0|290611845
+    binder:722_4-788     (    722) [001] .....  4050.075747: tracing_mark_write: B|722|refContentProvider: com.example.ipchubtestapp.provider
+    binder:722_4-788     (    722) [001] .....  4050.075750: tracing_mark_write: E|722
+    binder:722_1-736     (    722) [000] .....  4050.075763: tracing_mark_write: G|722|BroadcastQueue|queryReceivers|596622460
+    binder:722_1-736     (    722) [000] .....  4050.075781: tracing_mark_write: H|722|BroadcastQueue|596622460
+    binder:722_1-736     (    722) [000] .....  4050.075793: tracing_mark_write: G|722|BroadcastQueue|enqueueBroadcast|-584727655
+ e.ipchubtestapp-2987    (   2987) [003] .....  4050.075793: tracing_mark_write: E|2987
+    binder:722_1-736     (    722) [000] .....  4050.075805: tracing_mark_write: N|722|Broadcasts pending per uid|com.example.ipchubtestapp/10153:1
+    binder:722_1-736     (    722) [000] .....  4050.075807: tracing_mark_write: C|722|Broadcasts pending|10
+    binder:722_1-736     (    722) [000] .....  4050.075856: tracing_mark_write: H|722|BroadcastQueue|-584727655
+    binder:722_1-736     (    722) [000] .....  4050.075886: tracing_mark_write: H|722|BroadcastQueue|290611845
+    binder:722_4-788     (    722) [002] .....  4050.075901: tracing_mark_write: B|722|refContentProvider: com.example.ipchubtestapp.provider
+    binder:722_4-788     (    722) [002] .....  4050.075904: tracing_mark_write: E|722
+ ActivityManager-752     (    722) [001] .....  4050.076055: tracing_mark_write: G|722|BroadcastQueue|updateRunningList|2073397876
+ ActivityManager-752     (    722) [001] .....  4050.076149: tracing_mark_write: G|722|BroadcastQueue.mRunning[0]|aba5d48 2548:com.example.ipcmonitorclient/u0a151 running|179985736
+ ActivityManager-752     (    722) [001] .....  4050.076151: tracing_mark_write: G|722|BroadcastQueue|scheduleReceiverWarmLocked|-1420502987
+ ActivityManager-752     (    722) [001] .....  4050.076161: tracing_mark_write: G|722|BroadcastQueue|setDeliveryState|1010840507
+ ActivityManager-752     (    722) [001] .....  4050.076164: tracing_mark_write: G|722|BroadcastQueue.mRunning[0]|c0dc2e com.custom.aosp.IPC_MONITOR_EVENT/u0 scheduled|179985736
+ ActivityManager-752     (    722) [001] .....  4050.076165: tracing_mark_write: H|722|BroadcastQueue|1010840507
+ ActivityManager-752     (    722) [001] .....  4050.076179: tracing_mark_write: G|722|BroadcastQueue|finishReceiver|-22046814
+ ActivityManager-752     (    722) [001] .....  4050.076180: tracing_mark_write: G|722|BroadcastQueue|setDeliveryState|1010840507
+ ActivityManager-752     (    722) [001] .....  4050.076181: tracing_mark_write: H|722|BroadcastQueue.mRunning[0]|179985736
+ ActivityManager-752     (    722) [001] .....  4050.076215: tracing_mark_write: N|722|Broadcasts pending per uid|com.example.ipchubtestapp/10153:0
+ ActivityManager-752     (    722) [001] .....  4050.076216: tracing_mark_write: C|722|Broadcasts pending|9
+ ActivityManager-752     (    722) [001] .....  4050.076220: tracing_mark_write: H|722|BroadcastQueue|1010840507
+ ActivityManager-752     (    722) [001] .....  4050.076221: tracing_mark_write: H|722|BroadcastQueue|-22046814
+ ActivityManager-752     (    722) [001] .....  4050.076223: tracing_mark_write: H|722|BroadcastQueue|-1420502987
+ ActivityManager-752     (    722) [001] .....  4050.076224: tracing_mark_write: G|722|BroadcastQueue|demoteFromRunning|-1838922111
+ ActivityManager-752     (    722) [001] .....  4050.076225: tracing_mark_write: H|722|BroadcastQueue.mRunning[0]|179985736
+ ActivityManager-752     (    722) [001] .....  4050.076228: tracing_mark_write: H|722|BroadcastQueue|-1838922111
+ ActivityManager-752     (    722) [001] .....  4050.076234: tracing_mark_write: H|722|BroadcastQueue|2073397876
+ ActivityManager-752     (    722) [001] .....  4050.076255: tracing_mark_write: G|722|BroadcastQueue|updateRunningList|2073397876
+ ActivityManager-752     (    722) [001] .....  4050.076256: tracing_mark_write: H|722|BroadcastQueue|2073397876
+ IpcMonitorShare-800     (    722) [000] .....  4050.076570: tracing_mark_write: I|722|broadcastIntentTarget:com.example.ipcmonitorclient
+ IpcMonitorShare-800     (    722) [000] .....  4050.076572: tracing_mark_write: G|722|BroadcastQueue|broadcastIntent: 1000/com.custom.aosp.IPC_MONITOR_EVENT/0x50000000/___/u0|1906892858
+ IpcMonitorShare-800     (    722) [000] .....  4050.076580: tracing_mark_write: G|722|BroadcastQueue|queryReceivers|596622460
+ IpcMonitorShare-800     (    722) [000] .....  4050.076587: tracing_mark_write: H|722|BroadcastQueue|596622460
+ pcmonitorclient-2548    (   2548) [003] .....  4050.076740: tracing_mark_write: B|2548|broadcastReceiveReg: com.custom.aosp.IPC_MONITOR_EVENT;clz=com.example.ipcmonitorclient.IpcMonitorReceiver
+ IpcMonitorShare-800     (    722) [000] .....  4050.077085: tracing_mark_write: G|722|BroadcastQueue|enqueueBroadcast|-584727655
+ IpcMonitorShare-800     (    722) [000] .....  4050.077093: tracing_mark_write: N|722|Broadcasts pending per uid|android/1000:1
+ IpcMonitorShare-800     (    722) [000] .....  4050.077094: tracing_mark_write: C|722|Broadcasts pending|10
+ IpcMonitorShare-800     (    722) [000] .....  4050.077107: tracing_mark_write: H|722|BroadcastQueue|-584727655
+ IpcMonitorShare-800     (    722) [000] .....  4050.077132: tracing_mark_write: H|722|BroadcastQueue|1906892858
+ ActivityManager-752     (    722) [001] .....  4050.077172: tracing_mark_write: B|722|call: settings
+ ActivityManager-752     (    722) [001] .....  4050.077182: tracing_mark_write: E|722
+ ActivityManager-752     (    722) [001] .....  4050.077190: tracing_mark_write: G|722|BroadcastQueue|updateRunningList|2073397876
+ ActivityManager-752     (    722) [001] .....  4050.077266: tracing_mark_write: G|722|BroadcastQueue.mRunning[0]|aba5d48 2548:com.example.ipcmonitorclient/u0a151 running|179985736
+ ActivityManager-752     (    722) [001] .....  4050.077267: tracing_mark_write: G|722|BroadcastQueue|scheduleReceiverWarmLocked|-1420502987
+ ActivityManager-752     (    722) [001] .....  4050.077274: tracing_mark_write: G|722|BroadcastQueue|setDeliveryState|1010840507
+ ActivityManager-752     (    722) [001] .....  4050.077276: tracing_mark_write: G|722|BroadcastQueue.mRunning[0]|3879c65 com.custom.aosp.IPC_MONITOR_EVENT/u0 scheduled|179985736
+ ActivityManager-752     (    722) [001] .....  4050.077277: tracing_mark_write: H|722|BroadcastQueue|1010840507
+ ActivityManager-752     (    722) [001] .....  4050.077289: tracing_mark_write: G|722|BroadcastQueue|finishReceiver|-22046814
+ ActivityManager-752     (    722) [001] .....  4050.077290: tracing_mark_write: G|722|BroadcastQueue|setDeliveryState|1010840507
+ ActivityManager-752     (    722) [001] .....  4050.077291: tracing_mark_write: H|722|BroadcastQueue.mRunning[0]|179985736
+ ActivityManager-752     (    722) [001] .....  4050.077324: tracing_mark_write: N|722|Broadcasts pending per uid|android/1000:0
+ ActivityManager-752     (    722) [001] .....  4050.077326: tracing_mark_write: C|722|Broadcasts pending|9
+ ActivityManager-752     (    722) [001] .....  4050.077327: tracing_mark_write: H|722|BroadcastQueue|1010840507
+ ActivityManager-752     (    722) [001] .....  4050.077328: tracing_mark_write: H|722|BroadcastQueue|-22046814
+ ActivityManager-752     (    722) [001] .....  4050.077329: tracing_mark_write: H|722|BroadcastQueue|-1420502987
+ ActivityManager-752     (    722) [001] .....  4050.077330: tracing_mark_write: G|722|BroadcastQueue|demoteFromRunning|-1838922111
+ ActivityManager-752     (    722) [001] .....  4050.077331: tracing_mark_write: H|722|BroadcastQueue.mRunning[0]|179985736
+ ActivityManager-752     (    722) [001] .....  4050.077334: tracing_mark_write: H|722|BroadcastQueue|-1838922111
+ ActivityManager-752     (    722) [001] .....  4050.077335: tracing_mark_write: H|722|BroadcastQueue|2073397876
+ ActivityManager-752     (    722) [001] .....  4050.077361: tracing_mark_write: G|722|BroadcastQueue|updateRunningList|2073397876
+ ActivityManager-752     (    722) [001] .....  4050.077363: tracing_mark_write: H|722|BroadcastQueue|2073397876
+ pcmonitorclient-2548    (   2548) [003] .....  4050.077643: tracing_mark_write: C|2548|PendingResult#finish#ClassName:null|1
+ pcmonitorclient-2548    (   2548) [003] .....  4050.077679: tracing_mark_write: E|2548
+ pcmonitorclient-2548    (   2548) [003] .....  4050.077689: tracing_mark_write: B|2548|broadcastReceiveReg: com.custom.aosp.IPC_MONITOR_EVENT;clz=com.example.ipcmonitorclient.IpcMonitorReceiver
+ pcmonitorclient-2548    (   2548) [003] .....  4050.078045: tracing_mark_write: C|2548|PendingResult#finish#ClassName:null|1
+ pcmonitorclient-2548    (   2548) [003] .....  4050.078055: tracing_mark_write: E|2548
+    binder:722_6-1081    (    722) [003] .....  4050.078396: tracing_mark_write: B|722|updateOomAdj_executingService
+    binder:722_6-1081    (    722) [003] .....  4050.078519: tracing_mark_write: E|722
+    binder:722_6-1081    (    722) [000] .....  4050.081104: tracing_mark_write: B|722|refContentProvider: com.example.ipchubtestapp.provider
+    binder:722_6-1081    (    722) [000] .....  4050.081106: tracing_mark_write: E|722
+ pcmonitorclient-2548    (   2548) [000] .....  4050.083678: tracing_mark_write: B|2548|trimMemory: 40
+ pcmonitorclient-2548    (   2548) [000] .....  4050.083704: tracing_mark_write: E|2548
+ pcmonitorclient-2548    (   2548) [000] .....  4050.083715: tracing_mark_write: B|2548|trimMemory: 40
+ pcmonitorclient-2548    (   2548) [000] .....  4050.083718: tracing_mark_write: E|2548
+ pcmonitorclient-2548    (   2548) [000] .....  4050.083720: tracing_mark_write: B|2548|trimMemory: 40
+ pcmonitorclient-2548    (   2548) [000] .....  4050.083721: tracing_mark_write: E|2548
+ pcmonitorclient-2548    (   2548) [000] .....  4050.083723: tracing_mark_write: B|2548|trimMemory: 40
+ pcmonitorclient-2548    (   2548) [000] .....  4050.083728: tracing_mark_write: E|2548
+    binder:722_6-1081    (    722) [003] .....  4050.886288: tracing_mark_write: B|722|call: settings
+    binder:722_6-1081    (    722) [003] .....  4050.886322: tracing_mark_write: E|722
+    binder:722_4-788     (    722) [000] .....  4050.886464: tracing_mark_write: B|722|refContentProvider: com.example.ipchubtestapp.provider
+    binder:722_4-788     (    722) [000] .....  4050.886469: tracing_mark_write: E|722
+   binder:2987_1-2996    (   2987) [001] .....  4050.887562: tracing_mark_write: B|2987|insert: com.example.ipchubtestapp.provider
+   binder:2987_1-2996    (   2987) [001] .....  4050.888630: tracing_mark_write: E|2987
+    binder:722_6-1081    (    722) [002] .....  4050.889095: tracing_mark_write: B|722|refContentProvider: com.example.ipchubtestapp.provider
+    binder:722_6-1081    (    722) [002] .....  4050.889098: tracing_mark_write: E|722
+    binder:722_4-788     (    722) [000] .....  4050.889452: tracing_mark_write: I|722|broadcastIntentTarget:com.example.ipcmonitorclient
+    binder:722_4-788     (    722) [000] .....  4050.889456: tracing_mark_write: G|722|BroadcastQueue|broadcastIntent: 10153/com.custom.aosp.IPC_MONITOR_EVENT/0x50000000/___/u0|290611845
+    binder:722_4-788     (    722) [000] .....  4050.889475: tracing_mark_write: G|722|BroadcastQueue|queryReceivers|596622460
+    binder:722_4-788     (    722) [000] .....  4050.889492: tracing_mark_write: H|722|BroadcastQueue|596622460
+    binder:722_4-788     (    722) [000] .....  4050.889504: tracing_mark_write: G|722|BroadcastQueue|enqueueBroadcast|-584727655
+    binder:722_4-788     (    722) [000] .....  4050.889510: tracing_mark_write: N|722|Broadcasts pending per uid|com.example.ipchubtestapp/10153:1
+    binder:722_4-788     (    722) [000] .....  4050.889511: tracing_mark_write: C|722|Broadcasts pending|10
+    binder:722_4-788     (    722) [000] .....  4050.889564: tracing_mark_write: H|722|BroadcastQueue|-584727655
+    binder:722_4-788     (    722) [000] .....  4050.889672: tracing_mark_write: H|722|BroadcastQueue|290611845
+ IpcMonitorShare-800     (    722) [000] .....  4050.889940: tracing_mark_write: I|722|broadcastIntentTarget:com.example.ipcmonitorclient
+ IpcMonitorShare-800     (    722) [000] .n...  4050.889942: tracing_mark_write: G|722|BroadcastQueue|broadcastIntent: 1000/com.custom.aosp.IPC_MONITOR_EVENT/0x50000000/___/u0|1906892858
+ IpcMonitorShare-800     (    722) [000] .....  4050.890364: tracing_mark_write: G|722|BroadcastQueue|queryReceivers|596622460
+ IpcMonitorShare-800     (    722) [000] .....  4050.890373: tracing_mark_write: H|722|BroadcastQueue|596622460
+ IpcMonitorShare-800     (    722) [000] .....  4050.890609: tracing_mark_write: G|722|BroadcastQueue|enqueueBroadcast|-584727655
+ IpcMonitorShare-800     (    722) [000] .....  4050.890624: tracing_mark_write: N|722|Broadcasts pending per uid|android/1000:1
+ IpcMonitorShare-800     (    722) [000] .....  4050.890628: tracing_mark_write: C|722|Broadcasts pending|11
+ IpcMonitorShare-800     (    722) [000] .....  4050.890650: tracing_mark_write: H|722|BroadcastQueue|-584727655
+ IpcMonitorShare-800     (    722) [000] .....  4050.890931: tracing_mark_write: H|722|BroadcastQueue|1906892858
+ ActivityManager-752     (    722) [003] .....  4050.891911: tracing_mark_write: G|722|BroadcastQueue|updateRunningList|2073397876
+ ActivityManager-752     (    722) [003] .....  4050.892352: tracing_mark_write: G|722|BroadcastQueue.mRunning[0]|aba5d48 2548:com.example.ipcmonitorclient/u0a151 running|179985736
+ ActivityManager-752     (    722) [003] .....  4050.892354: tracing_mark_write: G|722|BroadcastQueue|scheduleReceiverWarmLocked|-1420502987
+ ActivityManager-752     (    722) [003] .n...  4050.892367: tracing_mark_write: G|722|BroadcastQueue|setDeliveryState|1010840507
+ ActivityManager-752     (    722) [003] .....  4050.892521: tracing_mark_write: G|722|BroadcastQueue.mRunning[0]|a10e748 com.custom.aosp.IPC_MONITOR_EVENT/u0 scheduled|179985736
+ ActivityManager-752     (    722) [003] .....  4050.892522: tracing_mark_write: H|722|BroadcastQueue|1010840507
+ ActivityManager-752     (    722) [003] .....  4050.892566: tracing_mark_write: G|722|BroadcastQueue|finishReceiver|-22046814
+ ActivityManager-752     (    722) [003] .....  4050.892568: tracing_mark_write: G|722|BroadcastQueue|setDeliveryState|1010840507
+ ActivityManager-752     (    722) [003] .....  4050.892569: tracing_mark_write: H|722|BroadcastQueue.mRunning[0]|179985736
+ ActivityManager-752     (    722) [003] .....  4050.892638: tracing_mark_write: N|722|Broadcasts pending per uid|com.example.ipchubtestapp/10153:0
+ ActivityManager-752     (    722) [003] .....  4050.892640: tracing_mark_write: C|722|Broadcasts pending|10
+ ActivityManager-752     (    722) [003] .....  4050.892653: tracing_mark_write: H|722|BroadcastQueue|1010840507
+ ActivityManager-752     (    722) [003] .....  4050.892654: tracing_mark_write: H|722|BroadcastQueue|-22046814
+ ActivityManager-752     (    722) [003] .....  4050.892663: tracing_mark_write: G|722|BroadcastQueue|setDeliveryState|1010840507
+ ActivityManager-752     (    722) [003] .....  4050.892666: tracing_mark_write: G|722|BroadcastQueue.mRunning[0]|95a99e1 com.custom.aosp.IPC_MONITOR_EVENT/u0 scheduled|179985736
+ ActivityManager-752     (    722) [003] .....  4050.892667: tracing_mark_write: H|722|BroadcastQueue|1010840507
+ ActivityManager-752     (    722) [003] .....  4050.892686: tracing_mark_write: G|722|BroadcastQueue|finishReceiver|-22046814
+ ActivityManager-752     (    722) [003] .....  4050.892687: tracing_mark_write: G|722|BroadcastQueue|setDeliveryState|1010840507
+ ActivityManager-752     (    722) [003] .....  4050.892688: tracing_mark_write: H|722|BroadcastQueue.mRunning[0]|179985736
+ ActivityManager-752     (    722) [003] .....  4050.892767: tracing_mark_write: N|722|Broadcasts pending per uid|android/1000:0
+ ActivityManager-752     (    722) [003] .....  4050.892769: tracing_mark_write: C|722|Broadcasts pending|9
+ ActivityManager-752     (    722) [003] .....  4050.892770: tracing_mark_write: H|722|BroadcastQueue|1010840507
+ ActivityManager-752     (    722) [003] .....  4050.892771: tracing_mark_write: H|722|BroadcastQueue|-22046814
+ ActivityManager-752     (    722) [003] .....  4050.892773: tracing_mark_write: H|722|BroadcastQueue|-1420502987
+ ActivityManager-752     (    722) [003] .....  4050.892775: tracing_mark_write: G|722|BroadcastQueue|demoteFromRunning|-1838922111
+ ActivityManager-752     (    722) [003] .....  4050.892776: tracing_mark_write: H|722|BroadcastQueue.mRunning[0]|179985736
+ ActivityManager-752     (    722) [003] .....  4050.892783: tracing_mark_write: H|722|BroadcastQueue|-1838922111
+ ActivityManager-752     (    722) [003] .....  4050.892785: tracing_mark_write: H|722|BroadcastQueue|2073397876
+ pcmonitorclient-2548    (   2548) [000] .....  4050.892824: tracing_mark_write: B|2548|broadcastReceiveReg: com.custom.aosp.IPC_MONITOR_EVENT;clz=com.example.ipcmonitorclient.IpcMonitorReceiver
+ ActivityManager-752     (    722) [003] .....  4050.892876: tracing_mark_write: B|722|call: settings
+ ActivityManager-752     (    722) [003] .....  4050.892883: tracing_mark_write: E|722
+ ActivityManager-752     (    722) [003] .....  4050.892944: tracing_mark_write: G|722|BroadcastQueue|updateRunningList|2073397876
+ ActivityManager-752     (    722) [003] .....  4050.892947: tracing_mark_write: H|722|BroadcastQueue|2073397876
+ pcmonitorclient-2548    (   2548) [000] .....  4050.893818: tracing_mark_write: C|2548|PendingResult#finish#ClassName:null|1
+ pcmonitorclient-2548    (   2548) [000] .....  4050.893845: tracing_mark_write: E|2548
+ pcmonitorclient-2548    (   2548) [000] .....  4050.893859: tracing_mark_write: B|2548|broadcastReceiveReg: com.custom.aosp.IPC_MONITOR_EVENT;clz=com.example.ipcmonitorclient.IpcMonitorReceiver
+ pcmonitorclient-2548    (   2548) [000] .....  4050.894467: tracing_mark_write: C|2548|PendingResult#finish#ClassName:null|1
+ pcmonitorclient-2548    (   2548) [000] .....  4050.894500: tracing_mark_write: E|2548
+ pcmonitorclient-2548    (   2548) [001] .....  4050.900416: tracing_mark_write: B|2548|trimMemory: 40
+ pcmonitorclient-2548    (   2548) [001] .....  4050.900438: tracing_mark_write: E|2548
+ pcmonitorclient-2548    (   2548) [001] .....  4050.900604: tracing_mark_write: B|2548|trimMemory: 40
+ pcmonitorclient-2548    (   2548) [001] .n...  4050.900618: tracing_mark_write: E|2548
+    binder:722_1-736     (    722) [001] .....  4051.618481: tracing_mark_write: B|722|call: settings
+    binder:722_1-736     (    722) [001] .....  4051.618533: tracing_mark_write: E|722
+    binder:722_1-736     (    722) [001] .....  4051.619276: tracing_mark_write: B|722|refContentProvider: com.example.ipchubtestapp.provider
+    binder:722_1-736     (    722) [001] .....  4051.619280: tracing_mark_write: E|722
+   binder:2987_1-2996    (   2987) [001] .....  4051.620691: tracing_mark_write: B|2987|update: com.example.ipchubtestapp.provider
+   binder:2987_1-2996    (   2987) [001] .....  4051.620869: tracing_mark_write: E|2987
+    binder:722_4-788     (    722) [003] .....  4051.621217: tracing_mark_write: I|722|broadcastIntentTarget:com.example.ipcmonitorclient
+    binder:722_4-788     (    722) [003] .....  4051.621222: tracing_mark_write: G|722|BroadcastQueue|broadcastIntent: 10153/com.custom.aosp.IPC_MONITOR_EVENT/0x50000000/___/u0|290611845
+    binder:722_4-788     (    722) [003] .....  4051.621256: tracing_mark_write: G|722|BroadcastQueue|queryReceivers|596622460
+    binder:722_4-788     (    722) [003] .....  4051.621278: tracing_mark_write: H|722|BroadcastQueue|596622460
+    binder:722_4-788     (    722) [003] .....  4051.621306: tracing_mark_write: G|722|BroadcastQueue|enqueueBroadcast|-584727655
+    binder:722_4-788     (    722) [003] .....  4051.621313: tracing_mark_write: N|722|Broadcasts pending per uid|com.example.ipchubtestapp/10153:1
+    binder:722_4-788     (    722) [003] .....  4051.621315: tracing_mark_write: C|722|Broadcasts pending|10
+    binder:722_4-788     (    722) [003] .....  4051.621386: tracing_mark_write: H|722|BroadcastQueue|-584727655
+    binder:722_4-788     (    722) [003] .....  4051.621498: tracing_mark_write: H|722|BroadcastQueue|290611845
+ ActivityManager-752     (    722) [003] .....  4051.621554: tracing_mark_write: G|722|BroadcastQueue|updateRunningList|2073397876
+    binder:722_6-1081    (    722) [002] .....  4051.621672: tracing_mark_write: B|722|refContentProvider: com.example.ipchubtestapp.provider
+    binder:722_6-1081    (    722) [002] .....  4051.621675: tracing_mark_write: E|722
+ ActivityManager-752     (    722) [003] .....  4051.621715: tracing_mark_write: G|722|BroadcastQueue.mRunning[0]|aba5d48 2548:com.example.ipcmonitorclient/u0a151 running|179985736
+ ActivityManager-752     (    722) [003] .....  4051.621718: tracing_mark_write: G|722|BroadcastQueue|scheduleReceiverWarmLocked|-1420502987
+ ActivityManager-752     (    722) [003] .....  4051.621731: tracing_mark_write: G|722|BroadcastQueue|setDeliveryState|1010840507
+ ActivityManager-752     (    722) [003] .....  4051.621746: tracing_mark_write: G|722|BroadcastQueue.mRunning[0]|b7c4306 com.custom.aosp.IPC_MONITOR_EVENT/u0 scheduled|179985736
+ ActivityManager-752     (    722) [003] .....  4051.621747: tracing_mark_write: H|722|BroadcastQueue|1010840507
+ ActivityManager-752     (    722) [003] .....  4051.621778: tracing_mark_write: G|722|BroadcastQueue|finishReceiver|-22046814
+ ActivityManager-752     (    722) [003] .....  4051.621780: tracing_mark_write: G|722|BroadcastQueue|setDeliveryState|1010840507
+ ActivityManager-752     (    722) [003] .....  4051.621782: tracing_mark_write: H|722|BroadcastQueue.mRunning[0]|179985736
+ ActivityManager-752     (    722) [003] .....  4051.621838: tracing_mark_write: N|722|Broadcasts pending per uid|com.example.ipchubtestapp/10153:0
+ ActivityManager-752     (    722) [003] .....  4051.621839: tracing_mark_write: C|722|Broadcasts pending|9
+ ActivityManager-752     (    722) [003] .....  4051.621845: tracing_mark_write: H|722|BroadcastQueue|1010840507
+ ActivityManager-752     (    722) [003] .....  4051.621846: tracing_mark_write: H|722|BroadcastQueue|-22046814
+ ActivityManager-752     (    722) [003] .....  4051.621847: tracing_mark_write: H|722|BroadcastQueue|-1420502987
+ ActivityManager-752     (    722) [003] .....  4051.621849: tracing_mark_write: G|722|BroadcastQueue|demoteFromRunning|-1838922111
+ ActivityManager-752     (    722) [003] .....  4051.621850: tracing_mark_write: H|722|BroadcastQueue.mRunning[0]|179985736
+ ActivityManager-752     (    722) [003] .....  4051.621861: tracing_mark_write: H|722|BroadcastQueue|-1838922111
+ ActivityManager-752     (    722) [003] .....  4051.621863: tracing_mark_write: H|722|BroadcastQueue|2073397876
+ ActivityManager-752     (    722) [003] .....  4051.621951: tracing_mark_write: G|722|BroadcastQueue|updateRunningList|2073397876
+ ActivityManager-752     (    722) [003] .....  4051.621955: tracing_mark_write: H|722|BroadcastQueue|2073397876
+ IpcMonitorShare-800     (    722) [003] .....  4051.622694: tracing_mark_write: I|722|broadcastIntentTarget:com.example.ipcmonitorclient
+ IpcMonitorShare-800     (    722) [003] .....  4051.622696: tracing_mark_write: G|722|BroadcastQueue|broadcastIntent: 1000/com.custom.aosp.IPC_MONITOR_EVENT/0x50000000/___/u0|1906892858
+ IpcMonitorShare-800     (    722) [003] .....  4051.622708: tracing_mark_write: G|722|BroadcastQueue|queryReceivers|596622460
+ IpcMonitorShare-800     (    722) [003] .....  4051.622718: tracing_mark_write: H|722|BroadcastQueue|596622460
+ pcmonitorclient-2548    (   2548) [002] .....  4051.622751: tracing_mark_write: B|2548|broadcastReceiveReg: com.custom.aosp.IPC_MONITOR_EVENT;clz=com.example.ipcmonitorclient.IpcMonitorReceiver
+ IpcMonitorShare-800     (    722) [003] .....  4051.622958: tracing_mark_write: G|722|BroadcastQueue|enqueueBroadcast|-584727655
+ IpcMonitorShare-800     (    722) [003] .....  4051.622967: tracing_mark_write: N|722|Broadcasts pending per uid|android/1000:1
+ IpcMonitorShare-800     (    722) [003] .....  4051.622969: tracing_mark_write: C|722|Broadcasts pending|10
+ IpcMonitorShare-800     (    722) [003] .....  4051.622989: tracing_mark_write: H|722|BroadcastQueue|-584727655
+ IpcMonitorShare-800     (    722) [003] .....  4051.623029: tracing_mark_write: H|722|BroadcastQueue|1906892858
+ ActivityManager-752     (    722) [003] .....  4051.623107: tracing_mark_write: B|722|call: settings
+ ActivityManager-752     (    722) [003] .....  4051.623115: tracing_mark_write: E|722
+ ActivityManager-752     (    722) [003] .....  4051.623124: tracing_mark_write: G|722|BroadcastQueue|updateRunningList|2073397876
+ ActivityManager-752     (    722) [003] .....  4051.623334: tracing_mark_write: G|722|BroadcastQueue.mRunning[0]|aba5d48 2548:com.example.ipcmonitorclient/u0a151 running|179985736
+ ActivityManager-752     (    722) [003] .....  4051.623336: tracing_mark_write: G|722|BroadcastQueue|scheduleReceiverWarmLocked|-1420502987
+ ActivityManager-752     (    722) [003] .....  4051.623359: tracing_mark_write: G|722|BroadcastQueue|setDeliveryState|1010840507
+ ActivityManager-752     (    722) [003] .....  4051.623363: tracing_mark_write: G|722|BroadcastQueue.mRunning[0]|105f31d com.custom.aosp.IPC_MONITOR_EVENT/u0 scheduled|179985736
+ ActivityManager-752     (    722) [003] .....  4051.623364: tracing_mark_write: H|722|BroadcastQueue|1010840507
+ ActivityManager-752     (    722) [003] .....  4051.623438: tracing_mark_write: G|722|BroadcastQueue|finishReceiver|-22046814
+ ActivityManager-752     (    722) [003] .....  4051.623448: tracing_mark_write: G|722|BroadcastQueue|setDeliveryState|1010840507
+ ActivityManager-752     (    722) [003] .....  4051.623455: tracing_mark_write: H|722|BroadcastQueue.mRunning[0]|179985736
+ ActivityManager-752     (    722) [003] .....  4051.623536: tracing_mark_write: N|722|Broadcasts pending per uid|android/1000:0
+ ActivityManager-752     (    722) [003] .....  4051.623538: tracing_mark_write: C|722|Broadcasts pending|9
+ ActivityManager-752     (    722) [003] .....  4051.623541: tracing_mark_write: H|722|BroadcastQueue|1010840507
+ ActivityManager-752     (    722) [003] .....  4051.623545: tracing_mark_write: H|722|BroadcastQueue|-22046814
+ ActivityManager-752     (    722) [003] .....  4051.623548: tracing_mark_write: H|722|BroadcastQueue|-1420502987
+ ActivityManager-752     (    722) [003] .....  4051.623549: tracing_mark_write: G|722|BroadcastQueue|demoteFromRunning|-1838922111
+ ActivityManager-752     (    722) [003] .....  4051.623554: tracing_mark_write: H|722|BroadcastQueue.mRunning[0]|179985736
+ ActivityManager-752     (    722) [003] .....  4051.623569: tracing_mark_write: H|722|BroadcastQueue|-1838922111
+ ActivityManager-752     (    722) [003] .....  4051.623570: tracing_mark_write: H|722|BroadcastQueue|2073397876
+ ActivityManager-752     (    722) [003] .....  4051.623783: tracing_mark_write: G|722|BroadcastQueue|updateRunningList|2073397876
+ ActivityManager-752     (    722) [003] .....  4051.623788: tracing_mark_write: H|722|BroadcastQueue|2073397876
+ pcmonitorclient-2548    (   2548) [002] .....  4051.624826: tracing_mark_write: C|2548|PendingResult#finish#ClassName:null|1
+ pcmonitorclient-2548    (   2548) [002] .....  4051.624850: tracing_mark_write: E|2548
+ pcmonitorclient-2548    (   2548) [002] .....  4051.624865: tracing_mark_write: B|2548|broadcastReceiveReg: com.custom.aosp.IPC_MONITOR_EVENT;clz=com.example.ipcmonitorclient.IpcMonitorReceiver
+ pcmonitorclient-2548    (   2548) [002] .....  4051.625468: tracing_mark_write: C|2548|PendingResult#finish#ClassName:null|1
+ pcmonitorclient-2548    (   2548) [002] .....  4051.625492: tracing_mark_write: E|2548
+ pcmonitorclient-2548    (   2548) [000] .....  4051.634063: tracing_mark_write: B|2548|trimMemory: 40
+ pcmonitorclient-2548    (   2548) [000] .....  4051.634087: tracing_mark_write: E|2548
+ pcmonitorclient-2548    (   2548) [000] .....  4051.634125: tracing_mark_write: B|2548|trimMemory: 40
+ pcmonitorclient-2548    (   2548) [000] .....  4051.634139: tracing_mark_write: E|2548
+ pcmonitorclient-2548    (   2548) [000] .....  4051.634143: tracing_mark_write: B|2548|trimMemory: 40
+ pcmonitorclient-2548    (   2548) [000] .....  4051.634146: tracing_mark_write: E|2548
+ pcmonitorclient-2548    (   2548) [000] .....  4051.634148: tracing_mark_write: B|2548|trimMemory: 40
+ pcmonitorclient-2548    (   2548) [000] .....  4051.634151: tracing_mark_write: E|2548
+    binder:722_6-1081    (    722) [001] .....  4052.267965: tracing_mark_write: B|722|call: settings
+    binder:722_6-1081    (    722) [001] .....  4052.267990: tracing_mark_write: E|722
+    binder:722_1-736     (    722) [002] .....  4052.269419: tracing_mark_write: B|722|refContentProvider: com.example.ipchubtestapp.provider
+    binder:722_1-736     (    722) [002] .....  4052.269424: tracing_mark_write: E|722
+   binder:2987_1-2996    (   2987) [001] .....  4052.270157: tracing_mark_write: B|2987|delete: com.example.ipchubtestapp.provider
+   binder:2987_1-2996    (   2987) [001] .....  4052.270529: tracing_mark_write: E|2987
+    binder:722_4-788     (    722) [003] .....  4052.270784: tracing_mark_write: B|722|refContentProvider: com.example.ipchubtestapp.provider
+    binder:722_4-788     (    722) [003] .....  4052.270787: tracing_mark_write: E|722
+    binder:722_6-1081    (    722) [001] .....  4052.272282: tracing_mark_write: I|722|broadcastIntentTarget:com.example.ipcmonitorclient
+    binder:722_6-1081    (    722) [001] .....  4052.272292: tracing_mark_write: G|722|BroadcastQueue|broadcastIntent: 10153/com.custom.aosp.IPC_MONITOR_EVENT/0x50000000/___/u0|290611845
+    binder:722_6-1081    (    722) [001] .....  4052.272327: tracing_mark_write: G|722|BroadcastQueue|queryReceivers|596622460
+    binder:722_6-1081    (    722) [001] .....  4052.272346: tracing_mark_write: H|722|BroadcastQueue|596622460
+    binder:722_6-1081    (    722) [001] .....  4052.272360: tracing_mark_write: G|722|BroadcastQueue|enqueueBroadcast|-584727655
+    binder:722_6-1081    (    722) [001] .....  4052.272368: tracing_mark_write: N|722|Broadcasts pending per uid|com.example.ipchubtestapp/10153:1
+    binder:722_6-1081    (    722) [001] .....  4052.272370: tracing_mark_write: C|722|Broadcasts pending|10
+    binder:722_6-1081    (    722) [001] .....  4052.272444: tracing_mark_write: H|722|BroadcastQueue|-584727655
+    binder:722_6-1081    (    722) [001] .....  4052.272509: tracing_mark_write: H|722|BroadcastQueue|290611845
+ IpcMonitorShare-800     (    722) [003] .....  4052.272755: tracing_mark_write: I|722|broadcastIntentTarget:com.example.ipcmonitorclient
+ IpcMonitorShare-800     (    722) [003] .....  4052.272758: tracing_mark_write: G|722|BroadcastQueue|broadcastIntent: 1000/com.custom.aosp.IPC_MONITOR_EVENT/0x50000000/___/u0|1906892858
+ IpcMonitorShare-800     (    722) [003] .....  4052.272768: tracing_mark_write: G|722|BroadcastQueue|queryReceivers|596622460
+ IpcMonitorShare-800     (    722) [003] .....  4052.272777: tracing_mark_write: H|722|BroadcastQueue|596622460
+ IpcMonitorShare-800     (    722) [003] .....  4052.273133: tracing_mark_write: G|722|BroadcastQueue|enqueueBroadcast|-584727655
+ IpcMonitorShare-800     (    722) [003] .....  4052.273139: tracing_mark_write: N|722|Broadcasts pending per uid|android/1000:1
+ IpcMonitorShare-800     (    722) [003] .....  4052.273141: tracing_mark_write: C|722|Broadcasts pending|11
+ IpcMonitorShare-800     (    722) [003] .....  4052.273168: tracing_mark_write: H|722|BroadcastQueue|-584727655
+ IpcMonitorShare-800     (    722) [003] .....  4052.273197: tracing_mark_write: H|722|BroadcastQueue|1906892858
+ ActivityManager-752     (    722) [003] .....  4052.273267: tracing_mark_write: B|722|call: settings
+ ActivityManager-752     (    722) [003] .....  4052.273275: tracing_mark_write: E|722
+ ActivityManager-752     (    722) [003] .....  4052.273288: tracing_mark_write: G|722|BroadcastQueue|updateRunningList|2073397876
+ ActivityManager-752     (    722) [003] .....  4052.273581: tracing_mark_write: G|722|BroadcastQueue.mRunning[0]|aba5d48 2548:com.example.ipcmonitorclient/u0a151 running|179985736
+ ActivityManager-752     (    722) [003] .....  4052.273583: tracing_mark_write: G|722|BroadcastQueue|scheduleReceiverWarmLocked|-1420502987
+ ActivityManager-752     (    722) [003] .....  4052.273609: tracing_mark_write: G|722|BroadcastQueue|setDeliveryState|1010840507
+ ActivityManager-752     (    722) [003] .....  4052.273613: tracing_mark_write: G|722|BroadcastQueue.mRunning[0]|3eb5760 com.custom.aosp.IPC_MONITOR_EVENT/u0 scheduled|179985736
+ ActivityManager-752     (    722) [003] .....  4052.273614: tracing_mark_write: H|722|BroadcastQueue|1010840507
+ ActivityManager-752     (    722) [003] .....  4052.273635: tracing_mark_write: G|722|BroadcastQueue|finishReceiver|-22046814
+ ActivityManager-752     (    722) [003] .....  4052.273636: tracing_mark_write: G|722|BroadcastQueue|setDeliveryState|1010840507
+ ActivityManager-752     (    722) [003] .....  4052.273637: tracing_mark_write: H|722|BroadcastQueue.mRunning[0]|179985736
+ ActivityManager-752     (    722) [003] .....  4052.273674: tracing_mark_write: N|722|Broadcasts pending per uid|com.example.ipchubtestapp/10153:0
+ ActivityManager-752     (    722) [003] .....  4052.273675: tracing_mark_write: C|722|Broadcasts pending|10
+ ActivityManager-752     (    722) [003] .....  4052.273679: tracing_mark_write: H|722|BroadcastQueue|1010840507
+ ActivityManager-752     (    722) [003] .....  4052.273680: tracing_mark_write: H|722|BroadcastQueue|-22046814
+ ActivityManager-752     (    722) [003] .....  4052.273685: tracing_mark_write: G|722|BroadcastQueue|setDeliveryState|1010840507
+ ActivityManager-752     (    722) [003] .....  4052.273699: tracing_mark_write: G|722|BroadcastQueue.mRunning[0]|413a419 com.custom.aosp.IPC_MONITOR_EVENT/u0 scheduled|179985736
+ ActivityManager-752     (    722) [003] .....  4052.273701: tracing_mark_write: H|722|BroadcastQueue|1010840507
+ ActivityManager-752     (    722) [003] .....  4052.273718: tracing_mark_write: G|722|BroadcastQueue|finishReceiver|-22046814
+ ActivityManager-752     (    722) [003] .....  4052.273719: tracing_mark_write: G|722|BroadcastQueue|setDeliveryState|1010840507
+ ActivityManager-752     (    722) [003] .....  4052.273721: tracing_mark_write: H|722|BroadcastQueue.mRunning[0]|179985736
+ ActivityManager-752     (    722) [003] .....  4052.273732: tracing_mark_write: N|722|Broadcasts pending per uid|android/1000:0
+ ActivityManager-752     (    722) [003] .....  4052.273733: tracing_mark_write: C|722|Broadcasts pending|9
+ ActivityManager-752     (    722) [003] .....  4052.273734: tracing_mark_write: H|722|BroadcastQueue|1010840507
+ ActivityManager-752     (    722) [003] .....  4052.273735: tracing_mark_write: H|722|BroadcastQueue|-22046814
+ ActivityManager-752     (    722) [003] .....  4052.273736: tracing_mark_write: H|722|BroadcastQueue|-1420502987
+ ActivityManager-752     (    722) [003] .....  4052.273739: tracing_mark_write: G|722|BroadcastQueue|demoteFromRunning|-1838922111
+ ActivityManager-752     (    722) [003] .....  4052.273740: tracing_mark_write: H|722|BroadcastQueue.mRunning[0]|179985736
+ ActivityManager-752     (    722) [003] .....  4052.273746: tracing_mark_write: H|722|BroadcastQueue|-1838922111
+ ActivityManager-752     (    722) [003] .....  4052.273749: tracing_mark_write: H|722|BroadcastQueue|2073397876
+ ActivityManager-752     (    722) [003] .....  4052.274386: tracing_mark_write: G|722|BroadcastQueue|updateRunningList|2073397876
+ ActivityManager-752     (    722) [003] .....  4052.274390: tracing_mark_write: H|722|BroadcastQueue|2073397876
+ pcmonitorclient-2548    (   2548) [000] .....  4052.277509: tracing_mark_write: B|2548|broadcastReceiveReg: com.custom.aosp.IPC_MONITOR_EVENT;clz=com.example.ipcmonitorclient.IpcMonitorReceiver
+ pcmonitorclient-2548    (   2548) [000] .....  4052.278472: tracing_mark_write: C|2548|PendingResult#finish#ClassName:null|1
+ pcmonitorclient-2548    (   2548) [000] .....  4052.278487: tracing_mark_write: E|2548
+ pcmonitorclient-2548    (   2548) [000] .....  4052.278505: tracing_mark_write: B|2548|broadcastReceiveReg: com.custom.aosp.IPC_MONITOR_EVENT;clz=com.example.ipcmonitorclient.IpcMonitorReceiver
+ pcmonitorclient-2548    (   2548) [000] .....  4052.279166: tracing_mark_write: C|2548|PendingResult#finish#ClassName:null|1
+ pcmonitorclient-2548    (   2548) [000] .....  4052.279192: tracing_mark_write: E|2548
+ pcmonitorclient-2548    (   2548) [000] .....  4052.284937: tracing_mark_write: B|2548|trimMemory: 40
+ pcmonitorclient-2548    (   2548) [000] .....  4052.284957: tracing_mark_write: E|2548
+ pcmonitorclient-2548    (   2548) [000] .....  4052.285007: tracing_mark_write: B|2548|trimMemory: 40
+ pcmonitorclient-2548    (   2548) [000] .....  4052.285017: tracing_mark_write: E|2548
+    binder:722_1-736     (    722) [002] .....  4052.902015: tracing_mark_write: B|722|call: settings
+    binder:722_1-736     (    722) [002] .....  4052.902064: tracing_mark_write: E|722
+    binder:722_1-736     (    722) [002] .....  4052.902884: tracing_mark_write: B|722|refContentProvider: com.example.ipchubtestapp.provider
+    binder:722_1-736     (    722) [002] .....  4052.902888: tracing_mark_write: E|722
+   binder:2987_1-2996    (   2987) [001] .....  4052.903290: tracing_mark_write: B|2987|call: com.example.ipchubtestapp.provider
+   binder:2987_1-2996    (   2987) [001] .....  4052.903494: tracing_mark_write: E|2987
+    binder:722_6-1081    (    722) [000] .....  4052.903829: tracing_mark_write: I|722|broadcastIntentTarget:com.example.ipcmonitorclient
+    binder:722_6-1081    (    722) [000] .....  4052.903832: tracing_mark_write: G|722|BroadcastQueue|broadcastIntent: 10153/com.custom.aosp.IPC_MONITOR_EVENT/0x50000000/___/u0|290611845
+    binder:722_6-1081    (    722) [000] .....  4052.903850: tracing_mark_write: G|722|BroadcastQueue|queryReceivers|596622460
+    binder:722_6-1081    (    722) [000] .....  4052.903867: tracing_mark_write: H|722|BroadcastQueue|596622460
+    binder:722_6-1081    (    722) [000] .....  4052.903885: tracing_mark_write: G|722|BroadcastQueue|enqueueBroadcast|-584727655
+    binder:722_6-1081    (    722) [000] .....  4052.903891: tracing_mark_write: N|722|Broadcasts pending per uid|com.example.ipchubtestapp/10153:1
+    binder:722_6-1081    (    722) [000] .....  4052.903892: tracing_mark_write: C|722|Broadcasts pending|10
+    binder:722_6-1081    (    722) [000] .....  4052.903956: tracing_mark_write: H|722|BroadcastQueue|-584727655
+    binder:722_6-1081    (    722) [000] .....  4052.903997: tracing_mark_write: H|722|BroadcastQueue|290611845
+    binder:722_4-788     (    722) [001] .....  4052.905099: tracing_mark_write: B|722|refContentProvider: com.example.ipchubtestapp.provider
+    binder:722_4-788     (    722) [001] .....  4052.905102: tracing_mark_write: E|722
+ ActivityManager-752     (    722) [003] .....  4052.905336: tracing_mark_write: G|722|BroadcastQueue|updateRunningList|2073397876
+ ActivityManager-752     (    722) [003] .....  4052.905506: tracing_mark_write: G|722|BroadcastQueue.mRunning[0]|aba5d48 2548:com.example.ipcmonitorclient/u0a151 running|179985736
+ ActivityManager-752     (    722) [003] .....  4052.905508: tracing_mark_write: G|722|BroadcastQueue|scheduleReceiverWarmLocked|-1420502987
+ ActivityManager-752     (    722) [003] .....  4052.905521: tracing_mark_write: G|722|BroadcastQueue|setDeliveryState|1010840507
+ ActivityManager-752     (    722) [003] .....  4052.905525: tracing_mark_write: G|722|BroadcastQueue.mRunning[0]|cb2acde com.custom.aosp.IPC_MONITOR_EVENT/u0 scheduled|179985736
+ ActivityManager-752     (    722) [003] .....  4052.905526: tracing_mark_write: H|722|BroadcastQueue|1010840507
+ ActivityManager-752     (    722) [003] .....  4052.905545: tracing_mark_write: G|722|BroadcastQueue|finishReceiver|-22046814
+ ActivityManager-752     (    722) [003] .....  4052.905546: tracing_mark_write: G|722|BroadcastQueue|setDeliveryState|1010840507
+ ActivityManager-752     (    722) [003] .....  4052.905547: tracing_mark_write: H|722|BroadcastQueue.mRunning[0]|179985736
+ ActivityManager-752     (    722) [003] .....  4052.905583: tracing_mark_write: N|722|Broadcasts pending per uid|com.example.ipchubtestapp/10153:0
+ ActivityManager-752     (    722) [003] .....  4052.905584: tracing_mark_write: C|722|Broadcasts pending|9
+ ActivityManager-752     (    722) [003] .....  4052.905589: tracing_mark_write: H|722|BroadcastQueue|1010840507
+ ActivityManager-752     (    722) [003] .....  4052.905590: tracing_mark_write: H|722|BroadcastQueue|-22046814
+ ActivityManager-752     (    722) [003] .....  4052.905591: tracing_mark_write: H|722|BroadcastQueue|-1420502987
+ ActivityManager-752     (    722) [003] .....  4052.905593: tracing_mark_write: G|722|BroadcastQueue|demoteFromRunning|-1838922111
+ ActivityManager-752     (    722) [003] .....  4052.905594: tracing_mark_write: H|722|BroadcastQueue.mRunning[0]|179985736
+ ActivityManager-752     (    722) [003] .....  4052.905599: tracing_mark_write: H|722|BroadcastQueue|-1838922111
+ ActivityManager-752     (    722) [003] .....  4052.905600: tracing_mark_write: H|722|BroadcastQueue|2073397876
+ ActivityManager-752     (    722) [003] .....  4052.905647: tracing_mark_write: G|722|BroadcastQueue|updateRunningList|2073397876
+ ActivityManager-752     (    722) [003] .....  4052.905649: tracing_mark_write: H|722|BroadcastQueue|2073397876
+ IpcMonitorShare-800     (    722) [000] .....  4052.905890: tracing_mark_write: I|722|broadcastIntentTarget:com.example.ipcmonitorclient
+ IpcMonitorShare-800     (    722) [000] .....  4052.905893: tracing_mark_write: G|722|BroadcastQueue|broadcastIntent: 1000/com.custom.aosp.IPC_MONITOR_EVENT/0x50000000/___/u0|1906892858
+ pcmonitorclient-2548    (   2548) [001] .....  4052.905901: tracing_mark_write: B|2548|broadcastReceiveReg: com.custom.aosp.IPC_MONITOR_EVENT;clz=com.example.ipcmonitorclient.IpcMonitorReceiver
+ IpcMonitorShare-800     (    722) [000] .....  4052.905904: tracing_mark_write: G|722|BroadcastQueue|queryReceivers|596622460
+ IpcMonitorShare-800     (    722) [000] .....  4052.905915: tracing_mark_write: H|722|BroadcastQueue|596622460
+ pcmonitorclient-2548    (   2548) [001] .....  4052.906809: tracing_mark_write: C|2548|PendingResult#finish#ClassName:null|1
+ pcmonitorclient-2548    (   2548) [001] .....  4052.906825: tracing_mark_write: E|2548
+ IpcMonitorShare-800     (    722) [000] .....  4052.906980: tracing_mark_write: G|722|BroadcastQueue|enqueueBroadcast|-584727655
+ IpcMonitorShare-800     (    722) [000] .....  4052.907621: tracing_mark_write: N|722|Broadcasts pending per uid|android/1000:1
+ IpcMonitorShare-800     (    722) [000] .....  4052.907624: tracing_mark_write: C|722|Broadcasts pending|10
+ IpcMonitorShare-800     (    722) [000] .....  4052.907642: tracing_mark_write: H|722|BroadcastQueue|-584727655
+ IpcMonitorShare-800     (    722) [000] .....  4052.907661: tracing_mark_write: H|722|BroadcastQueue|1906892858
+ ActivityManager-752     (    722) [002] .....  4052.907681: tracing_mark_write: B|722|call: settings
+ ActivityManager-752     (    722) [002] .....  4052.907688: tracing_mark_write: E|722
+ ActivityManager-752     (    722) [002] .....  4052.907702: tracing_mark_write: G|722|BroadcastQueue|updateRunningList|2073397876
+ ActivityManager-752     (    722) [002] .....  4052.907810: tracing_mark_write: G|722|BroadcastQueue.mRunning[0]|aba5d48 2548:com.example.ipcmonitorclient/u0a151 running|179985736
+ ActivityManager-752     (    722) [002] .....  4052.907811: tracing_mark_write: G|722|BroadcastQueue|scheduleReceiverWarmLocked|-1420502987
+ ActivityManager-752     (    722) [002] .....  4052.907821: tracing_mark_write: G|722|BroadcastQueue|setDeliveryState|1010840507
+ ActivityManager-752     (    722) [002] .....  4052.907824: tracing_mark_write: G|722|BroadcastQueue.mRunning[0]|b168d5 com.custom.aosp.IPC_MONITOR_EVENT/u0 scheduled|179985736
+ ActivityManager-752     (    722) [002] .....  4052.907825: tracing_mark_write: H|722|BroadcastQueue|1010840507
+ ActivityManager-752     (    722) [002] .....  4052.907847: tracing_mark_write: G|722|BroadcastQueue|finishReceiver|-22046814
+ ActivityManager-752     (    722) [002] .....  4052.907849: tracing_mark_write: G|722|BroadcastQueue|setDeliveryState|1010840507
+ ActivityManager-752     (    722) [002] .....  4052.907850: tracing_mark_write: H|722|BroadcastQueue.mRunning[0]|179985736
+ ActivityManager-752     (    722) [002] .....  4052.907884: tracing_mark_write: N|722|Broadcasts pending per uid|android/1000:0
+ ActivityManager-752     (    722) [002] .....  4052.907886: tracing_mark_write: C|722|Broadcasts pending|9
+ ActivityManager-752     (    722) [002] .....  4052.907887: tracing_mark_write: H|722|BroadcastQueue|1010840507
+ ActivityManager-752     (    722) [002] .....  4052.907888: tracing_mark_write: H|722|BroadcastQueue|-22046814
+ ActivityManager-752     (    722) [002] .....  4052.907890: tracing_mark_write: H|722|BroadcastQueue|-1420502987
+ ActivityManager-752     (    722) [002] .....  4052.907891: tracing_mark_write: G|722|BroadcastQueue|demoteFromRunning|-1838922111
+ ActivityManager-752     (    722) [002] .....  4052.907892: tracing_mark_write: H|722|BroadcastQueue.mRunning[0]|179985736
+ ActivityManager-752     (    722) [002] .....  4052.907896: tracing_mark_write: H|722|BroadcastQueue|-1838922111
+ ActivityManager-752     (    722) [002] .....  4052.907897: tracing_mark_write: H|722|BroadcastQueue|2073397876
+ ActivityManager-752     (    722) [002] .....  4052.907939: tracing_mark_write: G|722|BroadcastQueue|updateRunningList|2073397876
+ ActivityManager-752     (    722) [002] .....  4052.907941: tracing_mark_write: H|722|BroadcastQueue|2073397876
+ pcmonitorclient-2548    (   2548) [001] .....  4052.907942: tracing_mark_write: B|2548|broadcastReceiveReg: com.custom.aosp.IPC_MONITOR_EVENT;clz=com.example.ipcmonitorclient.IpcMonitorReceiver
+ pcmonitorclient-2548    (   2548) [001] .....  4052.908846: tracing_mark_write: C|2548|PendingResult#finish#ClassName:null|1
+ pcmonitorclient-2548    (   2548) [001] .....  4052.908869: tracing_mark_write: E|2548
+ pcmonitorclient-2548    (   2548) [003] .....  4052.917603: tracing_mark_write: B|2548|trimMemory: 40
+ pcmonitorclient-2548    (   2548) [003] .....  4052.917625: tracing_mark_write: E|2548
+ pcmonitorclient-2548    (   2548) [003] .....  4052.917663: tracing_mark_write: B|2548|trimMemory: 40
+ pcmonitorclient-2548    (   2548) [003] .....  4052.917667: tracing_mark_write: E|2548
+ pcmonitorclient-2548    (   2548) [003] .....  4052.917670: tracing_mark_write: B|2548|trimMemory: 40
+ pcmonitorclient-2548    (   2548) [003] .....  4052.917673: tracing_mark_write: E|2548
+ pcmonitorclient-2548    (   2548) [003] .....  4052.917675: tracing_mark_write: B|2548|trimMemory: 40
+ pcmonitorclient-2548    (   2548) [003] .....  4052.917677: tracing_mark_write: E|2548
+    binder:722_4-788     (    722) [003] .....  4053.602388: tracing_mark_write: B|722|call: settings
+    binder:722_4-788     (    722) [003] .....  4053.602434: tracing_mark_write: E|722
+    binder:722_6-1081    (    722) [002] .....  4053.602521: tracing_mark_write: B|722|startService: intent=Intent { xflg=0x4 cmp=com.example.ipchubtestapp/.CommandCenterService (has extras) }, caller=com.example.ipccallertestapp, fgRequired=false
+    binder:722_6-1081    (    722) [002] .....  4053.602798: tracing_mark_write: I|722|startService(): {com.example.ipchubtestapp/com.example.ipchubtestapp.CommandCenterService}
+    binder:722_6-1081    (    722) [002] .....  4053.603238: tracing_mark_write: B|722|bringUpServiceLocked: com.example.ipchubtestapp/.CommandCenterService
+    binder:722_6-1081    (    722) [002] .....  4053.603333: tracing_mark_write: B|722|realStartServiceLocked: com.example.ipchubtestapp/.CommandCenterService
+    binder:722_6-1081    (    722) [002] .....  4053.603374: tracing_mark_write: B|722|updateOomAdj_startService
+    binder:722_6-1081    (    722) [002] .....  4053.603525: tracing_mark_write: E|722
+    binder:722_6-1081    (    722) [002] .....  4053.603842: tracing_mark_write: E|722
+    binder:722_6-1081    (    722) [002] .....  4053.603844: tracing_mark_write: E|722
+    binder:722_6-1081    (    722) [002] .....  4053.603910: tracing_mark_write: E|722
+ IpcMonitorShare-800     (    722) [002] .....  4053.604336: tracing_mark_write: I|722|broadcastIntentTarget:com.example.ipcmonitorclient
+ IpcMonitorShare-800     (    722) [002] .....  4053.604341: tracing_mark_write: G|722|BroadcastQueue|broadcastIntent: 1000/com.custom.aosp.IPC_MONITOR_EVENT/0x50000000/___/u0|1906892858
+ IpcMonitorShare-800     (    722) [002] .....  4053.604378: tracing_mark_write: G|722|BroadcastQueue|queryReceivers|596622460
+   binder:2987_1-2996    (   2987) [001] .....  4053.604446: tracing_mark_write: I|2987|scheduleCreateService. token=android.os.BinderProxy@7e81f6c
+ IpcMonitorShare-800     (    722) [002] .....  4053.604883: tracing_mark_write: H|722|BroadcastQueue|596622460
+ e.ipchubtestapp-2987    (   2987) [003] .....  4053.604933: tracing_mark_write: B|2987|serviceCreate: CreateServiceData{token=android.os.BinderProxy@7e81f6c className=com.example.ipchubtestapp.CommandCenterService packageName=com.example.ipchubtestapp intent=null}
+   binder:2987_1-2996    (   2987) [001] .....  4053.605021: tracing_mark_write: I|2987|scheduleServiceArgs. token=android.os.BinderProxy@7e81f6c startId=1
+ IpcMonitorShare-800     (    722) [002] .....  4053.605209: tracing_mark_write: G|722|BroadcastQueue|enqueueBroadcast|-584727655
+ IpcMonitorShare-800     (    722) [002] .....  4053.605216: tracing_mark_write: N|722|Broadcasts pending per uid|android/1000:1
+ IpcMonitorShare-800     (    722) [002] .....  4053.605218: tracing_mark_write: C|722|Broadcasts pending|10
+ IpcMonitorShare-800     (    722) [002] .....  4053.605275: tracing_mark_write: H|722|BroadcastQueue|-584727655
+ IpcMonitorShare-800     (    722) [002] .n...  4053.605342: tracing_mark_write: H|722|BroadcastQueue|1906892858
+ ActivityManager-752     (    722) [000] .....  4053.605387: tracing_mark_write: B|722|call: settings
+ ActivityManager-752     (    722) [000] .....  4053.605395: tracing_mark_write: E|722
+ ActivityManager-752     (    722) [000] .....  4053.605553: tracing_mark_write: G|722|BroadcastQueue|updateRunningList|2073397876
+ e.ipchubtestapp-2987    (   2987) [003] .....  4053.606630: tracing_mark_write: E|2987
+ e.ipchubtestapp-2987    (   2987) [003] .....  4053.606685: tracing_mark_write: B|2987|serviceStart: ServiceArgsData{token=android.os.BinderProxy@7e81f6c startId=1 args=Intent { xflg=0x4 cmp=com.example.ipchubtestapp/.CommandCenterService (has extras) }}
+ ActivityManager-752     (    722) [000] .....  4053.606741: tracing_mark_write: G|722|BroadcastQueue.mRunning[0]|aba5d48 2548:com.example.ipcmonitorclient/u0a151 running|179985736
+ ActivityManager-752     (    722) [000] .....  4053.606742: tracing_mark_write: G|722|BroadcastQueue|scheduleReceiverWarmLocked|-1420502987
+ ActivityManager-752     (    722) [000] .....  4053.606759: tracing_mark_write: G|722|BroadcastQueue|setDeliveryState|1010840507
+ ActivityManager-752     (    722) [000] .....  4053.606765: tracing_mark_write: G|722|BroadcastQueue.mRunning[0]|2cbd51 com.custom.aosp.IPC_MONITOR_EVENT/u0 scheduled|179985736
+ ActivityManager-752     (    722) [000] .....  4053.606767: tracing_mark_write: H|722|BroadcastQueue|1010840507
+ ActivityManager-752     (    722) [000] .....  4053.606789: tracing_mark_write: G|722|BroadcastQueue|finishReceiver|-22046814
+ ActivityManager-752     (    722) [000] .....  4053.606790: tracing_mark_write: G|722|BroadcastQueue|setDeliveryState|1010840507
+ ActivityManager-752     (    722) [000] .....  4053.606791: tracing_mark_write: H|722|BroadcastQueue.mRunning[0]|179985736
+ ActivityManager-752     (    722) [000] .....  4053.606822: tracing_mark_write: N|722|Broadcasts pending per uid|android/1000:0
+ ActivityManager-752     (    722) [000] .....  4053.606823: tracing_mark_write: C|722|Broadcasts pending|9
+ ActivityManager-752     (    722) [000] .....  4053.606826: tracing_mark_write: H|722|BroadcastQueue|1010840507
+ ActivityManager-752     (    722) [000] .....  4053.606827: tracing_mark_write: H|722|BroadcastQueue|-22046814
+ ActivityManager-752     (    722) [000] .....  4053.606828: tracing_mark_write: H|722|BroadcastQueue|-1420502987
+ ActivityManager-752     (    722) [000] .....  4053.606830: tracing_mark_write: G|722|BroadcastQueue|demoteFromRunning|-1838922111
+ ActivityManager-752     (    722) [000] .....  4053.606832: tracing_mark_write: H|722|BroadcastQueue.mRunning[0]|179985736
+ ActivityManager-752     (    722) [000] .....  4053.606838: tracing_mark_write: H|722|BroadcastQueue|-1838922111
+ ActivityManager-752     (    722) [000] .....  4053.606839: tracing_mark_write: H|722|BroadcastQueue|2073397876
+ ActivityManager-752     (    722) [000] .....  4053.606870: tracing_mark_write: G|722|BroadcastQueue|updateRunningList|2073397876
+ ActivityManager-752     (    722) [000] .....  4053.606872: tracing_mark_write: H|722|BroadcastQueue|2073397876
+    binder:722_6-1081    (    722) [002] .....  4053.606904: tracing_mark_write: I|722|broadcastIntentTarget:com.example.ipccallertestapp
+    binder:722_6-1081    (    722) [002] .....  4053.606906: tracing_mark_write: G|722|BroadcastQueue|broadcastIntent: 10153/com.example.ipchubtestapp.action.NIGHT_MODE/0x0/___/u0|-150958966
+    binder:722_6-1081    (    722) [002] .....  4053.606916: tracing_mark_write: G|722|BroadcastQueue|queryReceivers|596622460
+ pcmonitorclient-2548    (   2548) [001] .....  4053.607085: tracing_mark_write: B|2548|broadcastReceiveReg: com.custom.aosp.IPC_MONITOR_EVENT;clz=com.example.ipcmonitorclient.IpcMonitorReceiver
+    binder:722_6-1081    (    722) [002] .....  4053.607309: tracing_mark_write: H|722|BroadcastQueue|596622460
+    binder:722_6-1081    (    722) [002] .....  4053.607317: tracing_mark_write: G|722|BroadcastQueue|enqueueBroadcast|-584727655
+    binder:722_6-1081    (    722) [002] .....  4053.607323: tracing_mark_write: N|722|Broadcasts pending per uid|com.example.ipchubtestapp/10153:1
+    binder:722_6-1081    (    722) [002] .....  4053.607324: tracing_mark_write: C|722|Broadcasts pending|10
+    binder:722_6-1081    (    722) [002] .....  4053.607359: tracing_mark_write: H|722|BroadcastQueue|-584727655
+    binder:722_6-1081    (    722) [002] .....  4053.607395: tracing_mark_write: H|722|BroadcastQueue|-150958966
+ ActivityManager-752     (    722) [002] .....  4053.607490: tracing_mark_write: G|722|BroadcastQueue|updateRunningList|2073397876
+ ActivityManager-752     (    722) [002] .....  4053.607514: tracing_mark_write: G|722|BroadcastQueue.mRunning[0]|e413a8a 3016:com.example.ipccallertestapp/u0a152 running|239155850
+ ActivityManager-752     (    722) [002] .....  4053.607516: tracing_mark_write: G|722|BroadcastQueue|scheduleReceiverWarmLocked|-1420502987
+ e.ipchubtestapp-2987    (   2987) [003] .....  4053.607718: tracing_mark_write: E|2987
+ ActivityManager-752     (    722) [002] .....  4053.607919: tracing_mark_write: G|722|BroadcastQueue|setDeliveryState|1010840507
+ ActivityManager-752     (    722) [002] .....  4053.607923: tracing_mark_write: G|722|BroadcastQueue.mRunning[0]|26179b6 com.example.ipchubtestapp.action.NIGHT_MODE/u0 scheduled|239155850
+ ActivityManager-752     (    722) [002] .....  4053.607924: tracing_mark_write: H|722|BroadcastQueue|1010840507
+ ActivityManager-752     (    722) [002] .....  4053.607998: tracing_mark_write: H|722|BroadcastQueue|-1420502987
+ ActivityManager-752     (    722) [002] .....  4053.608114: tracing_mark_write: B|722|updateOomAdj_startReceiver
+ ActivityManager-752     (    722) [002] .....  4053.608206: tracing_mark_write: E|722
+ ActivityManager-752     (    722) [002] .....  4053.608208: tracing_mark_write: H|722|BroadcastQueue|2073397876
+ pcmonitorclient-2548    (   2548) [001] .....  4053.608239: tracing_mark_write: C|2548|PendingResult#finish#ClassName:null|1
+    binder:722_6-1081    (    722) [002] .....  4053.608241: tracing_mark_write: B|722|updateOomAdj_executingService
+ pcmonitorclient-2548    (   2548) [001] .....  4053.608256: tracing_mark_write: E|2548
+    binder:722_6-1081    (    722) [002] .....  4053.608282: tracing_mark_write: E|722
+ IpcMonitorShare-800     (    722) [001] .....  4053.608437: tracing_mark_write: I|722|broadcastIntentTarget:com.example.ipcmonitorclient
+ IpcMonitorShare-800     (    722) [001] .....  4053.608439: tracing_mark_write: G|722|BroadcastQueue|broadcastIntent: 1000/com.custom.aosp.IPC_MONITOR_EVENT/0x50000000/___/u0|1906892858
+ IpcMonitorShare-800     (    722) [001] .....  4053.608449: tracing_mark_write: G|722|BroadcastQueue|queryReceivers|596622460
+ IpcMonitorShare-800     (    722) [001] .....  4053.608458: tracing_mark_write: H|722|BroadcastQueue|596622460
+ IpcMonitorShare-800     (    722) [001] .....  4053.608710: tracing_mark_write: G|722|BroadcastQueue|enqueueBroadcast|-584727655
+ IpcMonitorShare-800     (    722) [001] .....  4053.608715: tracing_mark_write: N|722|Broadcasts pending per uid|android/1000:1
+ IpcMonitorShare-800     (    722) [001] .....  4053.608717: tracing_mark_write: C|722|Broadcasts pending|11
+ IpcMonitorShare-800     (    722) [001] .....  4053.608732: tracing_mark_write: H|722|BroadcastQueue|-584727655
+ IpcMonitorShare-800     (    722) [001] .....  4053.608779: tracing_mark_write: H|722|BroadcastQueue|1906892858
+ ActivityManager-752     (    722) [002] .....  4053.609345: tracing_mark_write: B|722|call: settings
+ ActivityManager-752     (    722) [002] .....  4053.609350: tracing_mark_write: E|722
+ ActivityManager-752     (    722) [002] .....  4053.609364: tracing_mark_write: G|722|BroadcastQueue|updateRunningList|2073397876
+ ActivityManager-752     (    722) [002] .....  4053.609440: tracing_mark_write: G|722|BroadcastQueue.mRunning[1]|aba5d48 2548:com.example.ipcmonitorclient/u0a151 running|179985736
+ ActivityManager-752     (    722) [002] .....  4053.609441: tracing_mark_write: G|722|BroadcastQueue|scheduleReceiverWarmLocked|-1420502987
+ ActivityManager-752     (    722) [002] .....  4053.609449: tracing_mark_write: G|722|BroadcastQueue|setDeliveryState|1010840507
+ ActivityManager-752     (    722) [002] .....  4053.609452: tracing_mark_write: G|722|BroadcastQueue.mRunning[1]|92edd8d com.custom.aosp.IPC_MONITOR_EVENT/u0 scheduled|179985736
+ ActivityManager-752     (    722) [002] .....  4053.609453: tracing_mark_write: H|722|BroadcastQueue|1010840507
+ ActivityManager-752     (    722) [002] .....  4053.609466: tracing_mark_write: G|722|BroadcastQueue|finishReceiver|-22046814
+ ActivityManager-752     (    722) [002] .....  4053.609467: tracing_mark_write: G|722|BroadcastQueue|setDeliveryState|1010840507
+ ActivityManager-752     (    722) [002] .....  4053.609468: tracing_mark_write: H|722|BroadcastQueue.mRunning[1]|179985736
+ ActivityManager-752     (    722) [002] .....  4053.609480: tracing_mark_write: N|722|Broadcasts pending per uid|android/1000:0
+ ActivityManager-752     (    722) [002] .....  4053.609481: tracing_mark_write: C|722|Broadcasts pending|10
+ ActivityManager-752     (    722) [002] .....  4053.609483: tracing_mark_write: H|722|BroadcastQueue|1010840507
+ ActivityManager-752     (    722) [002] .....  4053.609484: tracing_mark_write: H|722|BroadcastQueue|-22046814
+ ActivityManager-752     (    722) [002] .....  4053.609485: tracing_mark_write: H|722|BroadcastQueue|-1420502987
+ ActivityManager-752     (    722) [002] .....  4053.609486: tracing_mark_write: G|722|BroadcastQueue|demoteFromRunning|-1838922111
+ ActivityManager-752     (    722) [002] .....  4053.609487: tracing_mark_write: H|722|BroadcastQueue.mRunning[1]|179985736
+ ActivityManager-752     (    722) [002] .....  4053.609491: tracing_mark_write: H|722|BroadcastQueue|-1838922111
+ ActivityManager-752     (    722) [002] .....  4053.609492: tracing_mark_write: H|722|BroadcastQueue|2073397876
+ ActivityManager-752     (    722) [002] .....  4053.609516: tracing_mark_write: G|722|BroadcastQueue|updateRunningList|2073397876
+ ActivityManager-752     (    722) [002] .....  4053.609518: tracing_mark_write: H|722|BroadcastQueue|2073397876
+ pcmonitorclient-2548    (   2548) [000] .....  4053.610181: tracing_mark_write: B|2548|broadcastReceiveReg: com.custom.aosp.IPC_MONITOR_EVENT;clz=com.example.ipcmonitorclient.IpcMonitorReceiver
+ pcmonitorclient-2548    (   2548) [000] .....  4053.610860: tracing_mark_write: C|2548|PendingResult#finish#ClassName:null|1
+ pcmonitorclient-2548    (   2548) [000] .....  4053.610875: tracing_mark_write: E|2548
+ pcmonitorclient-2548    (   2548) [000] .n...  4053.617361: tracing_mark_write: B|2548|trimMemory: 40
+ pcmonitorclient-2548    (   2548) [000] .....  4053.617644: tracing_mark_write: E|2548
+ pcmonitorclient-2548    (   2548) [000] .....  4053.617665: tracing_mark_write: B|2548|trimMemory: 40
+ pcmonitorclient-2548    (   2548) [000] .....  4053.617669: tracing_mark_write: E|2548
+ pcmonitorclient-2548    (   2548) [000] .....  4053.617672: tracing_mark_write: B|2548|trimMemory: 40
+ pcmonitorclient-2548    (   2548) [000] .....  4053.617675: tracing_mark_write: E|2548
+ pcmonitorclient-2548    (   2548) [000] .....  4053.617677: tracing_mark_write: B|2548|trimMemory: 40
+ pcmonitorclient-2548    (   2548) [000] .....  4053.617679: tracing_mark_write: E|2548
+ pccallertestapp-3016    (   3016) [003] .....  4053.619109: tracing_mark_write: B|3016|broadcastReceiveComp: com.example.ipchubtestapp.action.NIGHT_MODE
+ pccallertestapp-3016    (   3016) [001] .....  4053.622637: tracing_mark_write: C|3016|PendingResult#finish#ClassName:null|1
+ pccallertestapp-3016    (   3016) [001] .....  4053.622725: tracing_mark_write: E|3016
+    binder:722_6-1081    (    722) [000] .....  4053.622795: tracing_mark_write: G|722|BroadcastQueue|finishReceiver|-22046814
+    binder:722_6-1081    (    722) [000] .....  4053.622797: tracing_mark_write: G|722|BroadcastQueue|setDeliveryState|1010840507
+    binder:722_6-1081    (    722) [000] .....  4053.622799: tracing_mark_write: H|722|BroadcastQueue.mRunning[0]|239155850
+    binder:722_6-1081    (    722) [000] .....  4053.622872: tracing_mark_write: N|722|Broadcasts pending per uid|com.example.ipchubtestapp/10153:0
+    binder:722_6-1081    (    722) [000] .....  4053.622874: tracing_mark_write: C|722|Broadcasts pending|9
+    binder:722_6-1081    (    722) [000] .....  4053.622890: tracing_mark_write: H|722|BroadcastQueue|1010840507
+    binder:722_6-1081    (    722) [000] .....  4053.622894: tracing_mark_write: H|722|BroadcastQueue|-22046814
+    binder:722_6-1081    (    722) [000] .....  4053.622897: tracing_mark_write: G|722|BroadcastQueue|demoteFromRunning|-1838922111
+    binder:722_6-1081    (    722) [000] .....  4053.622898: tracing_mark_write: H|722|BroadcastQueue.mRunning[0]|239155850
+    binder:722_6-1081    (    722) [000] .....  4053.622911: tracing_mark_write: H|722|BroadcastQueue|-1838922111
+    binder:722_6-1081    (    722) [000] .....  4053.622915: tracing_mark_write: B|722|updateOomAdj_finishReceiver
+    binder:722_6-1081    (    722) [000] .....  4053.623022: tracing_mark_write: E|722
+ ActivityManager-752     (    722) [002] .....  4053.623096: tracing_mark_write: G|722|BroadcastQueue|updateRunningList|2073397876
+ ActivityManager-752     (    722) [002] .....  4053.623107: tracing_mark_write: H|722|BroadcastQueue|2073397876
+ pccallertestapp-3016    (   3016) [003] .....  4053.905432: tracing_mark_write: B|3016|providerRemove
+ pccallertestapp-3016    (   3016) [003] .....  4053.905542: tracing_mark_write: E|3016
+   binder:722_12-1415    (    722) [001] .....  4053.905655: tracing_mark_write: B|722|removeContentProvider: com.example.ipchubtestapp.provider
+   binder:722_12-1415    (    722) [001] .....  4053.905735: tracing_mark_write: E|722
+   binder:722_12-1415    (    722) [001] .....  4054.456726: tracing_mark_write: B|722|call: settings
+   binder:722_12-1415    (    722) [001] .....  4054.456806: tracing_mark_write: E|722
+   binder:722_12-1415    (    722) [002] .....  4054.457656: tracing_mark_write: B|722|bindService:{com.example.ipchubtestapp/com.example.ipchubtestapp.CommandCenterService}
+   binder:722_12-1415    (    722) [002] .....  4054.458008: tracing_mark_write: B|722|bringUpServiceLocked: com.example.ipchubtestapp/.CommandCenterService
+   binder:722_12-1415    (    722) [002] .....  4054.458015: tracing_mark_write: E|722
+   binder:722_12-1415    (    722) [002] .....  4054.458060: tracing_mark_write: B|722|updateOomAdj_bindService
+   binder:722_12-1415    (    722) [002] .....  4054.458746: tracing_mark_write: E|722
+   binder:722_12-1415    (    722) [002] .....  4054.458809: tracing_mark_write: I|722|requestServiceBinding=Intent { xflg=0x4 cmp=com.example.ipchubtestapp/.CommandCenterService (has extras) }. bindSeq=72
+   binder:722_12-1415    (    722) [002] .....  4054.458929: tracing_mark_write: E|722
+   binder:2987_1-2996    (   2987) [003] .....  4054.459125: tracing_mark_write: I|2987|scheduleBindService. token=android.os.BinderProxy@7e81f6c bindSeq=72
+ IpcMonitorShare-800     (    722) [000] .....  4054.459147: tracing_mark_write: I|722|broadcastIntentTarget:com.example.ipcmonitorclient
+ IpcMonitorShare-800     (    722) [000] .....  4054.459154: tracing_mark_write: G|722|BroadcastQueue|broadcastIntent: 1000/com.custom.aosp.IPC_MONITOR_EVENT/0x50000000/___/u0|1906892858
+ IpcMonitorShare-800     (    722) [000] .....  4054.459184: tracing_mark_write: G|722|BroadcastQueue|queryReceivers|596622460
+ IpcMonitorShare-800     (    722) [000] .....  4054.459215: tracing_mark_write: H|722|BroadcastQueue|596622460
+ e.ipchubtestapp-2987    (   2987) [003] .....  4054.459284: tracing_mark_write: B|2987|serviceBind: BindServiceData{token=android.os.BinderProxy@7e81f6c intent=Intent { xflg=0x4 cmp=com.example.ipchubtestapp/.CommandCenterService (has extras) } bindToken = android.os.BinderProxy@8edc658 bindSeq=72}
+ IpcMonitorShare-800     (    722) [000] .....  4054.462396: tracing_mark_write: G|722|BroadcastQueue|enqueueBroadcast|-584727655
+ IpcMonitorShare-800     (    722) [000] .....  4054.462411: tracing_mark_write: N|722|Broadcasts pending per uid|android/1000:1
+ IpcMonitorShare-800     (    722) [000] .....  4054.462413: tracing_mark_write: C|722|Broadcasts pending|10
+ IpcMonitorShare-800     (    722) [000] .....  4054.462444: tracing_mark_write: H|722|BroadcastQueue|-584727655
+ IpcMonitorShare-800     (    722) [000] .....  4054.462512: tracing_mark_write: H|722|BroadcastQueue|1906892858
+    binder:722_6-1081    (    722) [000] .....  4054.462558: tracing_mark_write: B|722|updateOomAdj_executingService
+    binder:722_6-1081    (    722) [000] .....  4054.462628: tracing_mark_write: E|722
+ ActivityManager-752     (    722) [001] .....  4054.462688: tracing_mark_write: B|722|call: settings
+ e.ipchubtestapp-2987    (   2987) [003] .....  4054.462693: tracing_mark_write: E|2987
+ ActivityManager-752     (    722) [001] .....  4054.462709: tracing_mark_write: E|722
+ ActivityManager-752     (    722) [001] .....  4054.462728: tracing_mark_write: G|722|BroadcastQueue|updateRunningList|2073397876
+ ActivityManager-752     (    722) [001] .....  4054.462869: tracing_mark_write: G|722|BroadcastQueue.mRunning[0]|aba5d48 2548:com.example.ipcmonitorclient/u0a151 running|179985736
+ ActivityManager-752     (    722) [001] .....  4054.462874: tracing_mark_write: G|722|BroadcastQueue|scheduleReceiverWarmLocked|-1420502987
+ ActivityManager-752     (    722) [001] .....  4054.462898: tracing_mark_write: G|722|BroadcastQueue|setDeliveryState|1010840507
+ ActivityManager-752     (    722) [001] .....  4054.462908: tracing_mark_write: G|722|BroadcastQueue.mRunning[0]|fb1a9a8 com.custom.aosp.IPC_MONITOR_EVENT/u0 scheduled|179985736
+ ActivityManager-752     (    722) [001] .....  4054.462913: tracing_mark_write: H|722|BroadcastQueue|1010840507
+ ActivityManager-752     (    722) [001] .....  4054.462954: tracing_mark_write: G|722|BroadcastQueue|finishReceiver|-22046814
+ ActivityManager-752     (    722) [001] .....  4054.462959: tracing_mark_write: G|722|BroadcastQueue|setDeliveryState|1010840507
+ ActivityManager-752     (    722) [001] .....  4054.462965: tracing_mark_write: H|722|BroadcastQueue.mRunning[0]|179985736
+ ActivityManager-752     (    722) [001] .....  4054.463014: tracing_mark_write: N|722|Broadcasts pending per uid|android/1000:0
+ ActivityManager-752     (    722) [001] .....  4054.463019: tracing_mark_write: C|722|Broadcasts pending|9
+ ActivityManager-752     (    722) [001] .....  4054.463030: tracing_mark_write: H|722|BroadcastQueue|1010840507
+ ActivityManager-752     (    722) [001] .....  4054.463034: tracing_mark_write: H|722|BroadcastQueue|-22046814
+ ActivityManager-752     (    722) [001] .....  4054.463040: tracing_mark_write: H|722|BroadcastQueue|-1420502987
+ ActivityManager-752     (    722) [001] .....  4054.463045: tracing_mark_write: G|722|BroadcastQueue|demoteFromRunning|-1838922111
+ ActivityManager-752     (    722) [001] .....  4054.463050: tracing_mark_write: H|722|BroadcastQueue.mRunning[0]|179985736
+ ActivityManager-752     (    722) [001] .....  4054.463061: tracing_mark_write: H|722|BroadcastQueue|-1838922111
+ ActivityManager-752     (    722) [001] .....  4054.463066: tracing_mark_write: H|722|BroadcastQueue|2073397876
+ ActivityManager-752     (    722) [001] .....  4054.463184: tracing_mark_write: G|722|BroadcastQueue|updateRunningList|2073397876
+ ActivityManager-752     (    722) [001] .....  4054.463192: tracing_mark_write: H|722|BroadcastQueue|2073397876
+ pcmonitorclient-2548    (   2548) [002] .....  4054.463854: tracing_mark_write: B|2548|broadcastReceiveReg: com.custom.aosp.IPC_MONITOR_EVENT;clz=com.example.ipcmonitorclient.IpcMonitorReceiver
+ pcmonitorclient-2548    (   2548) [002] .....  4054.465611: tracing_mark_write: C|2548|PendingResult#finish#ClassName:null|1
+ pcmonitorclient-2548    (   2548) [002] .....  4054.465636: tracing_mark_write: E|2548
+ pcmonitorclient-2548    (   2548) [002] .....  4054.467981: tracing_mark_write: B|2548|trimMemory: 40
+ pcmonitorclient-2548    (   2548) [002] .....  4054.468277: tracing_mark_write: E|2548
+ pcmonitorclient-2548    (   2548) [002] .....  4054.468318: tracing_mark_write: B|2548|trimMemory: 40
+ pcmonitorclient-2548    (   2548) [002] .....  4054.468327: tracing_mark_write: E|2548
+    binder:722_6-1081    (    722) [003] .....  4055.185930: tracing_mark_write: B|722|call: settings
+    binder:722_6-1081    (    722) [003] .....  4055.185953: tracing_mark_write: E|722
+    binder:722_6-1081    (    722) [003] .....  4055.186469: tracing_mark_write: B|722|unbindService
+    binder:722_6-1081    (    722) [003] .....  4055.186517: tracing_mark_write: B|722|unbindServiceLocked: com.example.ipchubtestapp/.CommandCenterService from com.example.ipccallertestapp
+    binder:722_6-1081    (    722) [003] .....  4055.186647: tracing_mark_write: B|722|updateOomAdj_bindService
+    binder:722_6-1081    (    722) [003] .....  4055.186989: tracing_mark_write: E|722
+    binder:722_6-1081    (    722) [003] .....  4055.186990: tracing_mark_write: E|722
+    binder:722_6-1081    (    722) [003] .....  4055.186994: tracing_mark_write: E|722
+ IpcMonitorShare-800     (    722) [003] .....  4055.187153: tracing_mark_write: I|722|broadcastIntentTarget:com.example.ipcmonitorclient
+ IpcMonitorShare-800     (    722) [003] .....  4055.187157: tracing_mark_write: G|722|BroadcastQueue|broadcastIntent: 1000/com.custom.aosp.IPC_MONITOR_EVENT/0x50000000/___/u0|1906892858
+ IpcMonitorShare-800     (    722) [003] .....  4055.187173: tracing_mark_write: G|722|BroadcastQueue|queryReceivers|596622460
+ IpcMonitorShare-800     (    722) [003] .....  4055.187188: tracing_mark_write: H|722|BroadcastQueue|596622460
+   binder:2987_1-2996    (   2987) [003] .....  4055.187927: tracing_mark_write: I|2987|scheduleUnbindService. token=android.os.BinderProxy@7e81f6c
+ e.ipchubtestapp-2987    (   2987) [001] .....  4055.188250: tracing_mark_write: B|2987|serviceUnbind: BindServiceData{token=android.os.BinderProxy@7e81f6c intent=Intent { xflg=0x4 cmp=com.example.ipchubtestapp/.CommandCenterService (has extras) } bindToken = android.os.BinderProxy@8edc658 bindSeq=-1}
+ ActivityManager-752     (    722) [003] .....  4055.188624: tracing_mark_write: B|722|call: settings
+ ActivityManager-752     (    722) [003] .....  4055.188631: tracing_mark_write: E|722
+ IpcMonitorShare-800     (    722) [003] .....  4055.189879: tracing_mark_write: G|722|BroadcastQueue|enqueueBroadcast|-584727655
+ IpcMonitorShare-800     (    722) [003] .....  4055.189887: tracing_mark_write: N|722|Broadcasts pending per uid|android/1000:1
+ IpcMonitorShare-800     (    722) [003] .....  4055.189889: tracing_mark_write: C|722|Broadcasts pending|10
+ e.ipchubtestapp-2987    (   2987) [001] .....  4055.189899: tracing_mark_write: E|2987
+ IpcMonitorShare-800     (    722) [003] .....  4055.189942: tracing_mark_write: H|722|BroadcastQueue|-584727655
+ IpcMonitorShare-800     (    722) [003] .....  4055.190003: tracing_mark_write: H|722|BroadcastQueue|1906892858
+   binder:722_12-1415    (    722) [003] .....  4055.190243: tracing_mark_write: B|722|updateOomAdj_executingService
+   binder:722_12-1415    (    722) [003] .....  4055.190299: tracing_mark_write: E|722
+ ActivityManager-752     (    722) [003] .....  4055.190318: tracing_mark_write: G|722|BroadcastQueue|updateRunningList|2073397876
+ ActivityManager-752     (    722) [003] .....  4055.190497: tracing_mark_write: G|722|BroadcastQueue.mRunning[0]|aba5d48 2548:com.example.ipcmonitorclient/u0a151 running|179985736
+ ActivityManager-752     (    722) [003] .....  4055.190499: tracing_mark_write: G|722|BroadcastQueue|scheduleReceiverWarmLocked|-1420502987
+ ActivityManager-752     (    722) [003] .....  4055.190510: tracing_mark_write: G|722|BroadcastQueue|setDeliveryState|1010840507
+ ActivityManager-752     (    722) [003] .....  4055.190513: tracing_mark_write: G|722|BroadcastQueue.mRunning[0]|f407ba7 com.custom.aosp.IPC_MONITOR_EVENT/u0 scheduled|179985736
+ ActivityManager-752     (    722) [003] .....  4055.190514: tracing_mark_write: H|722|BroadcastQueue|1010840507
+ ActivityManager-752     (    722) [003] .....  4055.190532: tracing_mark_write: G|722|BroadcastQueue|finishReceiver|-22046814
+ ActivityManager-752     (    722) [003] .....  4055.190533: tracing_mark_write: G|722|BroadcastQueue|setDeliveryState|1010840507
+ ActivityManager-752     (    722) [003] .....  4055.190534: tracing_mark_write: H|722|BroadcastQueue.mRunning[0]|179985736
+ ActivityManager-752     (    722) [003] .....  4055.190564: tracing_mark_write: N|722|Broadcasts pending per uid|android/1000:0
+ ActivityManager-752     (    722) [003] .....  4055.190565: tracing_mark_write: C|722|Broadcasts pending|9
+ ActivityManager-752     (    722) [003] .....  4055.190568: tracing_mark_write: H|722|BroadcastQueue|1010840507
+ ActivityManager-752     (    722) [003] .....  4055.190569: tracing_mark_write: H|722|BroadcastQueue|-22046814
+ ActivityManager-752     (    722) [003] .....  4055.190572: tracing_mark_write: H|722|BroadcastQueue|-1420502987
+ ActivityManager-752     (    722) [003] .....  4055.190575: tracing_mark_write: G|722|BroadcastQueue|demoteFromRunning|-1838922111
+ ActivityManager-752     (    722) [003] .....  4055.190576: tracing_mark_write: H|722|BroadcastQueue.mRunning[0]|179985736
+ ActivityManager-752     (    722) [003] .....  4055.190583: tracing_mark_write: H|722|BroadcastQueue|-1838922111
+ ActivityManager-752     (    722) [003] .....  4055.190584: tracing_mark_write: H|722|BroadcastQueue|2073397876
+ ActivityManager-752     (    722) [003] .....  4055.190614: tracing_mark_write: G|722|BroadcastQueue|updateRunningList|2073397876
+ ActivityManager-752     (    722) [003] .....  4055.190616: tracing_mark_write: H|722|BroadcastQueue|2073397876
+ pcmonitorclient-2548    (   2548) [003] .....  4055.190782: tracing_mark_write: B|2548|broadcastReceiveReg: com.custom.aosp.IPC_MONITOR_EVENT;clz=com.example.ipcmonitorclient.IpcMonitorReceiver
+ pcmonitorclient-2548    (   2548) [003] .....  4055.191570: tracing_mark_write: C|2548|PendingResult#finish#ClassName:null|1
+ pcmonitorclient-2548    (   2548) [003] .....  4055.191599: tracing_mark_write: E|2548
+ pcmonitorclient-2548    (   2548) [003] .....  4055.201817: tracing_mark_write: B|2548|trimMemory: 40
+ pcmonitorclient-2548    (   2548) [003] .....  4055.201841: tracing_mark_write: E|2548
+ pcmonitorclient-2548    (   2548) [003] .....  4055.201884: tracing_mark_write: B|2548|trimMemory: 40
+ pcmonitorclient-2548    (   2548) [003] .....  4055.201889: tracing_mark_write: E|2548
+   binder:722_11-1413    (    722) [000] .....  4057.966182: tracing_mark_write: I|722|broadcastIntentTarget:null
+   binder:722_11-1413    (    722) [000] .....  4057.966195: tracing_mark_write: G|722|BroadcastQueue|broadcastIntent: 1001/android.intent.action.SIG_STR/0x0/_S_/u-1|1327192753
+   binder:722_11-1413    (    722) [000] .....  4057.966373: tracing_mark_write: G|722|BroadcastQueue|queryReceivers|596622460
+   binder:722_11-1413    (    722) [000] .....  4057.966438: tracing_mark_write: H|722|BroadcastQueue|596622460
+   binder:722_11-1413    (    722) [000] .....  4057.966554: tracing_mark_write: H|722|BroadcastQueue|1327192753
+ IpcMonitorShare-800     (    722) [003] .....  4057.967780: tracing_mark_write: I|722|broadcastIntentTarget:com.example.ipcmonitorclient
+ IpcMonitorShare-800     (    722) [003] .....  4057.967787: tracing_mark_write: G|722|BroadcastQueue|broadcastIntent: 1000/com.custom.aosp.IPC_MONITOR_EVENT/0x50000000/___/u0|1906892858
+ IpcMonitorShare-800     (    722) [003] .....  4057.967826: tracing_mark_write: G|722|BroadcastQueue|queryReceivers|596622460
+ IpcMonitorShare-800     (    722) [003] .....  4057.967855: tracing_mark_write: H|722|BroadcastQueue|596622460
+ IpcMonitorShare-800     (    722) [003] .....  4057.968602: tracing_mark_write: G|722|BroadcastQueue|enqueueBroadcast|-584727655
+ IpcMonitorShare-800     (    722) [003] .....  4057.968618: tracing_mark_write: N|722|Broadcasts pending per uid|android/1000:1
+ IpcMonitorShare-800     (    722) [003] .....  4057.968623: tracing_mark_write: C|722|Broadcasts pending|10
+ IpcMonitorShare-800     (    722) [003] .....  4057.968725: tracing_mark_write: H|722|BroadcastQueue|-584727655
+ IpcMonitorShare-800     (    722) [003] .....  4057.968815: tracing_mark_write: H|722|BroadcastQueue|1906892858
+ ActivityManager-752     (    722) [002] .....  4057.969074: tracing_mark_write: B|722|call: settings
+ ActivityManager-752     (    722) [002] .....  4057.969107: tracing_mark_write: E|722
+ ActivityManager-752     (    722) [002] .....  4057.969139: tracing_mark_write: G|722|BroadcastQueue|updateRunningList|2073397876
+ ActivityManager-752     (    722) [002] .....  4057.969736: tracing_mark_write: G|722|BroadcastQueue.mRunning[0]|aba5d48 2548:com.example.ipcmonitorclient/u0a151 running|179985736
+ ActivityManager-752     (    722) [002] .....  4057.969739: tracing_mark_write: G|722|BroadcastQueue|scheduleReceiverWarmLocked|-1420502987
+ ActivityManager-752     (    722) [002] .....  4057.973146: tracing_mark_write: G|722|BroadcastQueue|setDeliveryState|1010840507
+ ActivityManager-752     (    722) [002] .....  4057.973166: tracing_mark_write: G|722|BroadcastQueue.mRunning[0]|a6122f9 com.custom.aosp.IPC_MONITOR_EVENT/u0 scheduled|179985736
+ ActivityManager-752     (    722) [002] .....  4057.973169: tracing_mark_write: H|722|BroadcastQueue|1010840507
+ ActivityManager-752     (    722) [002] .....  4057.973261: tracing_mark_write: G|722|BroadcastQueue|finishReceiver|-22046814
+ ActivityManager-752     (    722) [002] .....  4057.973268: tracing_mark_write: G|722|BroadcastQueue|setDeliveryState|1010840507
+ ActivityManager-752     (    722) [002] .....  4057.973270: tracing_mark_write: H|722|BroadcastQueue.mRunning[0]|179985736
+ ActivityManager-752     (    722) [002] .....  4057.973325: tracing_mark_write: N|722|Broadcasts pending per uid|android/1000:0
+ ActivityManager-752     (    722) [002] .....  4057.973328: tracing_mark_write: C|722|Broadcasts pending|9
+ ActivityManager-752     (    722) [002] .....  4057.973334: tracing_mark_write: H|722|BroadcastQueue|1010840507
+ ActivityManager-752     (    722) [002] .....  4057.973336: tracing_mark_write: H|722|BroadcastQueue|-22046814
+ ActivityManager-752     (    722) [002] .....  4057.973340: tracing_mark_write: H|722|BroadcastQueue|-1420502987
+ ActivityManager-752     (    722) [002] .....  4057.973343: tracing_mark_write: G|722|BroadcastQueue|demoteFromRunning|-1838922111
+ ActivityManager-752     (    722) [002] .....  4057.973345: tracing_mark_write: H|722|BroadcastQueue.mRunning[0]|179985736
+ ActivityManager-752     (    722) [002] .....  4057.973364: tracing_mark_write: H|722|BroadcastQueue|-1838922111
+ ActivityManager-752     (    722) [002] .....  4057.973367: tracing_mark_write: H|722|BroadcastQueue|2073397876
+ ActivityManager-752     (    722) [002] .....  4057.973461: tracing_mark_write: G|722|BroadcastQueue|updateRunningList|2073397876
+ ActivityManager-752     (    722) [002] .....  4057.973465: tracing_mark_write: H|722|BroadcastQueue|2073397876
+ pcmonitorclient-2548    (   2548) [002] .....  4057.974179: tracing_mark_write: B|2548|broadcastReceiveReg: com.custom.aosp.IPC_MONITOR_EVENT;clz=com.example.ipcmonitorclient.IpcMonitorReceiver
+ pcmonitorclient-2548    (   2548) [002] .....  4057.977066: tracing_mark_write: C|2548|PendingResult#finish#ClassName:null|1
+ pcmonitorclient-2548    (   2548) [002] .....  4057.977134: tracing_mark_write: E|2548
+ pcmonitorclient-2548    (   2548) [002] .....  4057.984390: tracing_mark_write: B|2548|trimMemory: 40
+ pcmonitorclient-2548    (   2548) [002] .....  4057.984464: tracing_mark_write: E|2548
+ pcmonitorclient-2548    (   2548) [002] .....  4057.984534: tracing_mark_write: B|2548|trimMemory: 40
+ pcmonitorclient-2548    (   2548) [002] .....  4057.984547: tracing_mark_write: E|2548
+      android.bg-751     (    722) [003] .....  4058.934573: tracing_mark_write: B|722|updateOomAdj_removeProvider
+      android.bg-751     (    722) [003] .....  4058.935037: tracing_mark_write: N|722|FreezeLite|-----X--t-/2987/700/0/1/0/1
+      android.bg-751     (    722) [003] .....  4058.935069: tracing_mark_write: N|722|Freezer|updateAppFreezeStateLSP com.example.ipchubtestapp pid: 2987 isFreezeExempt: false isFrozen: false shouldNotFreeze: false shouldNotFreezeReason: 1 curAdj: 700 oldOomAdj: 0 immediate: false cpuCapability: false implicitCpuCapability: true cpuTimeReasons: 0x0 implicitCpuTimeReasons: 0x1
+     OomAdjuster-759     (    722) [000] .....  4058.935196: tracing_mark_write: B|722|setProcessGroup com.example.ipchubtestapp to 0
+   binder:2987_1-2996    (   2987) [002] .....  4058.935985: tracing_mark_write: I|2987|updateProcessState: processState=10
+      android.bg-751     (    722) [003] .....  4058.936471: tracing_mark_write: E|722
+     OomAdjuster-759     (    722) [001] .....  4058.940801: tracing_mark_write: E|722
