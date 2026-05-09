@@ -139,7 +139,7 @@ do
     CONTENT_PROVIDER_TOTAL_IPC_COUNT=$((CONTENT_PROVIDER_TOTAL_IPC_COUNT + 1))
 done
 
-CONTENT_PROVIDER_IPC_INTERCEPTION_PERC=$(echo "scale=2; ($CONTENT_PROVIDER_TOTAL_IPC_COUNT * 100)/ $CONTENT_PROVIDER_TOTAL_IPC_COUNT" | bc)
+CONTENT_PROVIDER_IPC_INTERCEPTION_PERC=$(echo "scale=2; ($CONTENT_PROVIDER_INTERCEPTED_IPC_COUNT * 100)/ $CONTENT_PROVIDER_TOTAL_IPC_COUNT" | bc)
 
 # Подсчет процента перехвата событий типа Service
 for atrace_service_record in $(grep -E "(startService|startForegroundService|bindService|unbindServiceLocked):" $ATRACE_OUTPUT_FILE | awk -F'|' '{print $3}')
