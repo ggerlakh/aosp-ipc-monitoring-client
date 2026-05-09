@@ -74,7 +74,7 @@ echo "Запуск atrace"
 adb shell atrace --async_start am
 echo "Ожидание $TRACE_DURATION_SECS секунд перед записью trace данных"
 sleep $TRACE_DURATION_SECS
-adb shell atrace --async_stop -o /data/local/tmp/atrace.output
+adb shell atrace --async_stop -o /data/local/tmp/$ATRACE_OUTPUT_FILE
 echo "Данные из Android по IPC взаимодействиям (atrace) сохранены в файл atrace.output"
 
 if [[ -f "$ATRACE_OUTPUT_FILE" ]]
@@ -115,11 +115,11 @@ do
 
     if [[ "$provider_called_method" == "call" ]]
     then
-        intercepted_ipc_monitor_provider_data=$(jq -Mrc --arg type "ContentProvider" --arg method "$provider_called_method" --arg authority "$provider_authority" 'select(.type == $type and (["query", "insert", "delete", "update"] | index($method) == null) and .payload.authority == $authority)' $IPC_MONITOR_OUTPUT_FILE)
-        jq_cmd="jq -Mrc --arg type \"ContentProvider\" --arg method \"$provider_called_method\" --arg authority \"$provider_authority\" 'select(.type == \$type and ([\"query\", \"insert\", \"delete\", \"update\"] | index(\$method) == null) and .payload.authority == \$authority)' $IPC_MONITOR_OUTPUT_FILE"
+        intercepted_ipc_monitor_provider_data=$(jq -Mrc --arg type "ContentProvider" --arg method "$provider_called_method" --arg authority "$provider_authority" 'select(.type == $type and (.payload.method | IN("query", "insert", "delete", "update") | not) and .payload.authority == $authority)' $IPC_MONITOR_OUTPUT_FILE | head -1)
+        jq_cmd="jq -Mrc --arg type \"ContentProvider\" --arg method \"$provider_called_method\" --arg authority \"$provider_authority\" 'select(.type == \$type and (.payload.method | IN(\"query\", \"insert\", \"delete\", \"update\") | not) and .payload.authority == \$authority)' $IPC_MONITOR_OUTPUT_FILE | head -1"
     else
-        intercepted_ipc_monitor_provider_data=$(jq -Mrc --arg type "ContentProvider" --arg method "$provider_called_method" --arg authority "$provider_authority" 'select(.type == $type and .payload.method == $method and .payload.authority == $authority)' $IPC_MONITOR_OUTPUT_FILE)
-        jq_cmd="jq -Mrc --arg type \"ContentProvider\" --arg method \"$provider_called_method\" --arg authority \"$provider_authority\" 'select(.type == $type and .payload.method == $method and .payload.authority == $authority)' $IPC_MONITOR_OUTPUT_FILE"
+        intercepted_ipc_monitor_provider_data=$(jq -Mrc --arg type "ContentProvider" --arg method "$provider_called_method" --arg authority "$provider_authority" 'select(.type == $type and .payload.method == $method and .payload.authority == $authority)' $IPC_MONITOR_OUTPUT_FILE | head -1)
+        jq_cmd="jq -Mrc --arg type \"ContentProvider\" --arg method \"$provider_called_method\" --arg authority \"$provider_authority\" 'select(.type == \$type and .payload.method == \$method and .payload.authority == \$authority)' $IPC_MONITOR_OUTPUT_FILE | head -1"
     fi
 
     if [[ "$VERBOSE" == "true" ]]
@@ -134,6 +134,7 @@ do
     then
         CONTENT_PROVIDER_INTERCEPTED_IPC_COUNT=$((CONTENT_PROVIDER_INTERCEPTED_IPC_COUNT + 1))
     fi
+
 
     CONTENT_PROVIDER_TOTAL_IPC_COUNT=$((CONTENT_PROVIDER_TOTAL_IPC_COUNT + 1))
 done
@@ -158,13 +159,13 @@ do
             ;;
     esac
 
-    intercepted_ipc_monitor_service_data=$(jq -Mrc --arg type "Service" --arg service_name "$service_name" --arg service_action "$service_action" 'select(.type == $type and .payload.service_name == $service_name and .payload.action == $service_action)' $IPC_MONITOR_OUTPUT_FILE)
+    intercepted_ipc_monitor_service_data=$(jq -Mrc --arg type "Service" --arg service_name "$service_name" --arg service_action "$service_action" 'select(.type == $type and .payload.service_name == $service_name and .payload.action == $service_action)' $IPC_MONITOR_OUTPUT_FILE | head -1)
 
     if [[ "$VERBOSE" == "true" ]]
     then
         echo "atrace_service_record = $atrace_service_record"
         echo "Через atrace в Android обнаружено событие об IPC с Service, service_action = $service_action, service_name = $service_name"
-        jq_cmd="jq -Mrc --arg type \"Service\" --arg service_name \"$service_name\" --arg service_action \"$service_action\" 'select(.type == \$type and .payload.service_name == \$service_name and .payload.action == \$service_action)' $IPC_MONITOR_OUTPUT_FILE"
+        jq_cmd="jq -Mrc --arg type \"Service\" --arg service_name \"$service_name\" --arg service_action \"$service_action\" 'select(.type == \$type and .payload.service_name == \$service_name and .payload.action == \$service_action)' $IPC_MONITOR_OUTPUT_FILE | head -1"
         echo "Поиск перехваченных данных (intercepted_ipc_monitor_service_data) системой мониторинга через jq_cmd = $jq_cmd"
         echo "intercepted_ipc_monitor_service_data = $intercepted_ipc_monitor_service_data"
     fi
@@ -173,6 +174,7 @@ do
     then
         SERVICE_INTERCEPTED_IPC_COUNT=$((SERVICE_INTERCEPTED_IPC_COUNT + 1))
     fi
+
 
     SERVICE_TOTAL_IPC_COUNT=$((SERVICE_TOTAL_IPC_COUNT + 1))
 done
@@ -200,7 +202,7 @@ while read -r target_line && read -r intent_line; do
     if [[ "$VERBOSE" == "true" ]]
     then
         echo "Через atrace в Android обнаружено событие об IPC с BroadcastReceiver, broadcast_action = $broadcast_action, broadcast_target = $broadcast_target"
-        jq_cmd="jq -Mrc --arg type \"BroadcastReceiver\" --arg broadcast_target \"$broadcast_target\" --arg broadcast_action \"$broadcast_action\" 'select(.type == \$type and .receiver == \$broadcast_target and .payload.action == \$broadcast_action)' $IPC_MONITOR_OUTPUT_FILE"
+        jq_cmd="jq -Mrc --arg type \"BroadcastReceiver\" --arg broadcast_target \"$broadcast_target\" --arg broadcast_action \"$broadcast_action\" 'select(.type == \$type and .receiver == \$broadcast_target and .payload.action == \$broadcast_action)' $IPC_MONITOR_OUTPUT_FILE | head -1"
         echo "Поиск перехваченных данных (intercepted_ipc_monitor_broadcast_data) системой мониторинга через jq_cmd = $jq_cmd"
         echo "intercepted_ipc_monitor_broadcast_data = $intercepted_ipc_monitor_broadcast_data"
     fi
@@ -209,6 +211,10 @@ while read -r target_line && read -r intent_line; do
     then
         BROADCAST_RECEIVER_INTERCEPTED_IPC_COUNT=$((BROADCAST_RECEIVER_INTERCEPTED_IPC_COUNT + 1))
     fi
+
+    
+
+
 
     BROADCAST_RECEIVER_TOTAL_IPC_COUNT=$((BROADCAST_RECEIVER_TOTAL_IPC_COUNT + 1))
 done < <(grep "\|broadcastIntent" $ATRACE_OUTPUT_FILE)
