@@ -17,7 +17,7 @@ import org.json.JSONObject;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
- * Shared singleton helper for IPC Monitoring (ContentProvider & Services).
+ * Shared singleton helper for IPC Monitoring (BroadcastReceiver, ContentProvider & Services).
  * Safe for Zygote and SystemServer usage.
  */
 public class IpcMonitorHelper {
@@ -164,7 +164,6 @@ public class IpcMonitorHelper {
             intent.putExtra("ipc_data", json.toString());
             intent.addFlags(Intent.FLAG_RECEIVER_REGISTERED_ONLY | Intent.FLAG_RECEIVER_FOREGROUND);
 
-            //context.sendBroadcastAsUser(intent, UserHandle.ALL);
             context.sendBroadcast(intent);
         } catch (Exception e) {
             Slog.e(TAG, "Failed to report ContentProvider interaction", e);

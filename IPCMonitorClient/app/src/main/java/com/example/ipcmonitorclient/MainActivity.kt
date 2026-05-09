@@ -49,7 +49,6 @@ class MainActivity : AppCompatActivity(), IpcWebSocketListener {
             val currentPackages = Settings.Global.getString(contentResolver, "itmo_yandex.ipc.monitoring_packages") ?: "*"
 
             binding.swAospMonitor.isChecked = (currentStatus == 1)
-//            if (currentPackages.isNotEmpty() && currentPackages != "*") {
             if (currentPackages.isNotEmpty()) {
                 binding.etFilter.setText(currentPackages)
             }
